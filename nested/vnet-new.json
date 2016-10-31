@@ -3,7 +3,16 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "location": {
-      "type": "string"
+      "type": "string",
+      "metadata": {
+        "description": "Resources deployment location"
+      }
+    },
+    "apiVersions": {
+      "type": "object",
+      "metadata": {
+        "description": "Resources API versions object"
+      }
     },
     "networkSettings": {
       "type": "object",
@@ -12,19 +21,17 @@
       }
     }
   },
-  "variables" : {
-    "templateAPIVersion": "2015-01-01",
-    "resourceAPIVersion": "2015-06-15",
+  "variables": {
     "virtualNetworkName": "[parameters('networkSettings').virtualNetworkName]",
     "virtualNetworkAddressPrefix": "[parameters('networkSettings').virtualNetworkAddressPrefix]",
-    "virtualNetworkId" : "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
-    "subnet1Name": "[parameters('networkSettings').subnet.markLogicSubnet.name]",
+    "virtualNetworkId": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
+    "subnet1Name": "[parameters('networkSettings').subnets.subnet1.name]",
     "subnet1Prefix": "[parameters('networkSettings').subnet.markLogicSubnet.prefix]",
-    "subnet1Ref" : "[concat(variables('virtualNetworkId'),'/subnets/',variables('subnet1Name'))]"
+    "subnet1Ref": "[concat(variables('virtualNetworkId'),'/subnets/',variables('subnet1Name'))]"
   },
   "resources": [
     {
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[parameters('apiVersions').networkAPIVersion]",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
       "location": "[parameters('location')]",
@@ -40,12 +47,6 @@
             "properties": {
               "addressPrefix": "[variables('subnet1Prefix')]"
             }
-          },
-          {
-            "name": "[variables('subnet2Name')]",
-            "properties": {
-              "addressPrefix": "[variables('subnet2Prefix')]"
-            }
           }
         ]
       }
@@ -54,10 +55,6 @@
   "outputs": {
     "subnet1Ref": {
       "value": "[variables('subnet1Ref')]",
-      "type": "string"
-    },
-    "subnet2Ref": {
-      "value": "[variables('subnet2Ref')]",
       "type": "string"
     }
   }
