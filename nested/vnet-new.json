@@ -26,7 +26,7 @@
     "virtualNetworkAddressPrefix": "[parameters('networkSettings').virtualNetworkAddressPrefix]",
     "virtualNetworkId": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnet1Name": "[parameters('networkSettings').subnets.subnet1.name]",
-    "subnet1Prefix": "[parameters('networkSettings').subnet.markLogicSubnet.prefix]",
+    "subnet1Prefix": "[parameters('networkSettings').subnets.subnet1.prefix]",
     "subnet1Ref": "[concat(variables('virtualNetworkId'),'/subnets/',variables('subnet1Name'))]"
   },
   "resources": [
