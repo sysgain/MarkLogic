@@ -189,7 +189,7 @@
         "description": "Base URL for Marketplace",
         "artifactsBaseUrl": ""
       },
-      "defaultValue": "https://raw.githubusercontent.com/haroldwongms/hwucptest/master"
+      "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/master"
     }
   },
   "variables": {
