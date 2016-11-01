@@ -130,6 +130,24 @@
         "description": "Subnet for the Search Head"
       }
     },
+    "subnet1Prefix": {
+      "type": "string",
+      "defaultValue": "10.0.1.0/24",
+      "metadata": {
+        "description": "Subnet for the Search Head"
+      }
+    },
+    "loadBalancerType": {
+      "type": "string",
+      "defaultValue": "external",
+      "allowedValues": [
+        "external",
+        "internal"
+      ],
+      "metadata": {
+        "description": "Subnet for the Search Head"
+      }
+    },
     "adminUsername": {
       "type": "string",
       "defaultValue": "ucpadmin",
@@ -174,10 +192,10 @@
     },
     "loadBalancerType": {
       "type": "string",
-      "defaultValue": "External",
+      "defaultValue": "external",
       "allowedValues": [
-        "External",
-        "Internal"
+        "external",
+        "internal"
       ],
       "metadata": {
         "description": "Type of Load Balancer to be used. External or Internal"
@@ -193,32 +211,29 @@
     }
   },
   "variables": {
-    "apiVersion": {
-        "deploymentAPIVersion": "2015-01-01",
-      },
-    "virtualNetworkTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'vnet-', parameters('virtualNetworkNewOrExisting'), '.json')]",
+    "apiVersions": {
+      "deploymentAPIVersion": "2015-01-01",
+      "networkAPIVersion": "2015-06-15"
+    },
     "networkSettings": {
       "virtualNetworkName": "[parameters('virtualNetworkName')]",
       "virtualNetworkExistingRGName": "[parameters('virtualNetworkExistingRGName')]",
       "virtualNetworkAddressPrefix": "[parameters('virtualNetworkAddressPrefix')]",
-      "subnet": {
-        "markLogicSubnet": {
+      "subnets": {
+        "subnet1": {
           "name": "[parameters('subnet1Name')]",
           "prefix": "[parameters('subnet1Prefix')]"
         }
-      },
-      "statics": {
-        "standaloneIp": "[parameters('subnet1StartAddress')]",
-        "clusterSearchheadIp": "[parameters('subnet1StartAddress')]",
-        "clusterMasterIp": "[parameters('subnet2StartAddress')]"
       }
-    }
+    },
+    "virtualNetworkTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'vnet-', parameters('virtualNetworkNewOrExisting'), '.json')]",
+    "loadBalancerTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'lb-', parameters('loadBalancerType'), '.json')]"
   },
   "resources": [
     {
       "name": "virtual-network",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('deploymentAPIVersion')]",
+      "apiVersion": "[variables('apiVersions').deploymentAPIVersion]",
       "comments": "Virtual network deployment",
       "properties": {
         "mode": "Incremental",
@@ -229,6 +244,9 @@
         "parameters": {
           "location": {
             "value": "[parameters('location')]"
+          },
+          "apiVersions": {
+            "value": "[variables('apiVersions')]"
           },
           "networkSettings": {
             "value": "[variables('networkSettings')]"
