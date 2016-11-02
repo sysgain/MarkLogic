@@ -25,7 +25,7 @@
       "location": "[variables('location')]",
       "copy": {
         "name": "storageAccountLoop",
-        "count": "[parameters('count')]"
+        "count": "[variables('count')]"
       },
       "properties": {
         "accountType": "[parameters('storageAccountType')]"
