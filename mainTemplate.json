@@ -29,8 +29,7 @@
     "clusterNodeCount": {
       "type": "int",
       "defaultValue": 3,
-      "minValue": 3,
-      "maxValue": 9,
+      "allowedValues": [1, 3, 4, 5, 6, 7, 8, 9, 10],
       "metadata": {
         "description": "Number of Nodes in the Multi Node Cluster (Multi Node). Minimum 3 Nodes and Maximum 10 Nodes"
       }
@@ -145,7 +144,7 @@
         "internal"
       ],
       "metadata": {
-        "description": "Subnet for the Search Head"
+        "description": "Type of Load Balancer to be used. External or Internal"
       }
     },
     "adminUsername": {
@@ -190,17 +189,6 @@
         "description": "Admin password for MarkLogic Admin Portal"
       }
     },
-    "loadBalancerType": {
-      "type": "string",
-      "defaultValue": "external",
-      "allowedValues": [
-        "external",
-        "internal"
-      ],
-      "metadata": {
-        "description": "Type of Load Balancer to be used. External or Internal"
-      }
-    },
     "baseUrl": {
       "type": "string",
       "metadata": {
@@ -211,9 +199,11 @@
     }
   },
   "variables": {
+    "uniqueString": "[substring(uniquestring(resourceGroup().id),0,8)]",
     "apiVersions": {
-      "deploymentAPIVersion": "2015-01-01",
-      "networkAPIVersion": "2015-06-15"
+      "deploymentApiVersion": "2015-01-01",
+      "networkApiVersion": "2015-06-15",
+      "storageApiVersion": "2015-06-15"
     },
     "networkSettings": {
       "virtualNetworkName": "[parameters('virtualNetworkName')]",
@@ -226,30 +216,53 @@
         }
       }
     },
-    "virtualNetworkTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'vnet-', parameters('virtualNetworkNewOrExisting'), '.json')]",
-    "loadBalancerTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'lb-', parameters('loadBalancerType'), '.json')]"
+    "storageSettings": {
+      "osDiskStorage": {
+        "location": "[parameters('location')]",
+        "storageAccountType": "Standard_LRS",
+        "storageApiVersion": "[variables('apiVersions').storageApiVersion]",
+        "count": "[parameters('clusterNodeCount')]",
+        "storageAccountName": "[concat('osdisk',variables('uniqueString'))]"
+      },
+      "dataDiskStorage": {
+        "location": "[parameters('location')]",
+        "storageAccountType": "[parameters('dataDiskStorageAccountType')]",
+        "storageApiVersion": "[variables('apiVersions').storageApiVersion]",
+        "count": "[parameters('clusterNodeCount')]",
+        "storageAccountName": "[concat('datadisk',variables('uniqueString'))]"
+      }
+    },
+    "templateUrls": {
+      "sharedResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'shared-resources.json')]",
+      "virtualNetworkTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'vnet-', parameters('virtualNetworkNewOrExisting'), '.json')]",
+      "loadBalancerTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'lb-', parameters('loadBalancerType'), '.json')]",
+      "storageAccountTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'storage-account-multi.json')]"
+    }
   },
   "resources": [
     {
-      "name": "virtual-network",
+      "name": "shared-resources",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersions').deploymentAPIVersion]",
       "comments": "Virtual network deployment",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('virtualNetworkTemplateUrl')]",
+          "uri": "[variables('templateUrls').sharedResourcesTemplateUrl]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
-          },
           "apiVersions": {
             "value": "[variables('apiVersions')]"
           },
+          "templateUrls": {
+            "value": "[variables('templateUrls')]"
+          },
           "networkSettings": {
             "value": "[variables('networkSettings')]"
+          },
+          "storageAccountSettings": {
+            "value": "[variables('storageSettings')]"
           }
         }
       }
