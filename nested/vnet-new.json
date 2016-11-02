@@ -2,18 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "location": {
-      "type": "string",
-      "metadata": {
-        "description": "Resources deployment location"
-      }
-    },
-    "apiVersions": {
-      "type": "object",
-      "metadata": {
-        "description": "Resources API versions object"
-      }
-    },
     "networkSettings": {
       "type": "object",
       "metadata": {
@@ -22,6 +10,8 @@
     }
   },
   "variables": {
+    "location": "[parameters('networkSettings').location]",
+    "networkApiVersion": "[parameters('networkSettings').virtualNetworkName]",
     "virtualNetworkName": "[parameters('networkSettings').virtualNetworkName]",
     "virtualNetworkAddressPrefix": "[parameters('networkSettings').virtualNetworkAddressPrefix]",
     "virtualNetworkId": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
@@ -31,11 +21,11 @@
   },
   "resources": [
     {
-      "apiVersion": "[parameters('apiVersions').networkAPIVersion]",
+      "apiVersion": "[variables('networkApiVersion')]",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
       "comments": "Virtual network with one subnet",
-      "location": "[parameters('location')]",
+      "location": "[variables('location')]",
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
