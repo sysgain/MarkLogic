@@ -195,7 +195,7 @@
         "description": "Base URL for Marketplace",
         "artifactsBaseUrl": ""
       },
-      "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/master"
+      "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/mltest"
     }
   },
   "variables": {
@@ -206,6 +206,8 @@
       "storageApiVersion": "2015-06-15"
     },
     "networkSettings": {
+      "location": "[parameters('location')]",
+      "networkApiVersion": "[variables('apiVersions').networkApiVersion]",
       "virtualNetworkName": "[parameters('virtualNetworkName')]",
       "virtualNetworkExistingRGName": "[parameters('virtualNetworkExistingRGName')]",
       "virtualNetworkAddressPrefix": "[parameters('virtualNetworkAddressPrefix')]",
