@@ -31,7 +31,9 @@
     "deploymentApiVersion": "[parameters('apiVersions').deploymentApiVersion]",
     "osDiskStorageAccountSettings": "[parameters('storageAccountSettings').osDiskStorage]",
     "dataDiskStorageAccountSettings": "[parameters('storageAccountSettings').dataDiskStorage]",
-    "storageAccountTemplateUrl": "[parameters('templateUrls').storageAccountTemplateUrl]"
+    "storageAccountTemplateUrl": "[parameters('templateUrls').storageAccountTemplateUrl]",
+    "virtualNetworkTemplateUrl": "[parameters('templateUrls').virtualNetworkTemplateUrl]"
+
   },
   "resources": [
     {
@@ -64,6 +66,23 @@
         "parameters": {
           "storageAccountSettings": {
             "value": "[variables('dataDiskStorageAccountSettings')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "virtualNetworkSubnetsDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('virtualNetworkTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "networkSettings": {
+            "value": "[parameters('networkSettings')]"
           }
         }
       }
