@@ -34,6 +34,7 @@
       "apiVersion": "[parameters('apiVersions').networkAPIVersion]",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
+      "comments": "Virtual network with one subnet",
       "location": "[parameters('location')]",
       "properties": {
         "addressSpace": {
