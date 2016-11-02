@@ -28,7 +28,7 @@
         "count": "[variables('count')]"
       },
       "properties": {
-        "accountType": "[parameters('storageAccountType')]"
+        "accountType": "[variables('storageAccountType')]"
       }
     }
   ]
