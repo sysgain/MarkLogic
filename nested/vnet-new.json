@@ -11,7 +11,7 @@
   },
   "variables": {
     "location": "[parameters('networkSettings').location]",
-    "networkApiVersion": "[parameters('networkSettings').virtualNetworkName]",
+    "networkApiVersion": "[parameters('networkSettings').networkApiVersion]",
     "virtualNetworkName": "[parameters('networkSettings').virtualNetworkName]",
     "virtualNetworkAddressPrefix": "[parameters('networkSettings').virtualNetworkAddressPrefix]",
     "virtualNetworkId": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
