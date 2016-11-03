@@ -14,7 +14,7 @@
         "description": "Nested template URL's"
       }
     },
-    "networkSettings": {
+    "nodeNetworkSettings": {
       "type": "object",
       "metadata": {
         "description": ""
@@ -38,8 +38,8 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "networkSettings": {
-            "value": "[parameters('networkSettings').nodeNetworkSettings]"
+          "nodeNetworkSettings": {
+            "value": "[parameters('nodeNetworkSettings').nodeNetworkSettings]"
           }
         }
       }
