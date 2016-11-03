@@ -219,7 +219,7 @@
         "description": "Base URL for Marketplace",
         "artifactsBaseUrl": ""
       },
-      "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/mltest"
+      "defaultValue": "https://github.com/sysgain/MarkLogic/edit/mltestDev/"
     }
   },
   "variables": {
