@@ -275,6 +275,7 @@
     },
     "templateUrls": {
       "sharedResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'shared-resources.json')]",
+      "networkResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-resources.json')]",
       "virtualNetworkTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'vnet-', parameters('virtualNetworkNewOrExisting'), '.json')]",
       "loadBalancerTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'lb-', parameters('loadBalancerType'), '.json')]",
       "storageAccountTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'storage-account-multi.json')]",
@@ -327,11 +328,8 @@
           "templateUrls": {
             "value": "[variables('templateUrls')]"
           },
-          "networkSettings": {
-            "value": "[variables('networkSettings')]"
-          },
-          "storageAccountSettings": {
-            "value": "[variables('storageSettings')]"
+          "nodeNetworkSettings": {
+            "value": "[variables('nodeNetworkSettings')]"
           }
         }
       }
