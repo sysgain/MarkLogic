@@ -39,7 +39,7 @@
         },
         "parameters": {
           "nodeNetworkSettings": {
-            "value": "[parameters('nodeNetworkSettings').nodeNetworkSettings]"
+            "value": "[parameters('nodeNetworkSettings')]"
           }
         }
       }
