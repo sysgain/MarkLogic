@@ -2,7 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "networkSettings": {
+    "nodeNetworkSettings": {
       "type": "object",
       "metadata": {
         "description": "Network settings object"
@@ -10,11 +10,11 @@
     }
   },
   "variables": {
-    "location": "[parameters('networkSettings').location]",
-    "count": "[parameters('networkSettings').count]",
-    "networkApiVersion": "[parameters('networkSettings').networkApiVersion]",
-    "publicIPAddressName": "[parameters('networkSettings').publicIPAddressName]",
-    "publicIPdnsPrefix": "[parameters('networkSettings').publicIPdnsPrefix]"
+    "location": "[parameters('nodeNetworkSettings').location]",
+    "count": "[parameters('nodeNetworkSettings').count]",
+    "networkApiVersion": "[parameters('nodeNetworkSettings').networkApiVersion]",
+    "publicIPAddressName": "[parameters('nodeNetworkSettings').publicIPAddressName]",
+    "publicIPdnsPrefix": "[parameters('nodeNetworkSettings').publicIPdnsPrefix]"
 
   },
   "resources": [
