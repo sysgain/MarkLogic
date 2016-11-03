@@ -38,7 +38,7 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "storageAccountSettings": {
+          "networkSettings": {
             "value": "[parameters('networkSettings').nodeNetworkSettings]"
           }
         }
