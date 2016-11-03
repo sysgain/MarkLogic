@@ -25,7 +25,7 @@
       "name": "[concat(variables('publicIPAddressName'),'-',copyIndex())]",
       "location": "[variables('location')]",
       "copy": {
-        "name": "loop",
+        "name": "publicIPLoop",
         "count": "[variables('count')]"
       },
       "properties": {
