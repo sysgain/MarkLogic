@@ -224,6 +224,9 @@
   },
   "variables": {
     "uniqueString": "[substring(uniquestring(resourceGroup().id),0,8)]",
+    "publicIpTemplate": "[concat('lbPublicIp',parameters('loadBalancerType'))]",
+    "lbPublicIpexternal": "publicip.json",
+    "lbPublicIpinternal": "publicip-empty.json",
     "apiVersions": {
       "deploymentApiVersion": "2015-01-01",
       "networkApiVersion": "2015-06-15",
@@ -253,9 +256,8 @@
         "location": "[parameters('location')]",
         "networkApiVersion": "[variables('apiVersions').networkApiVersion]",
         "publicIPAddressName": "mllbpublicip",
-      "publicIPdnsPrefix": "[concat(parameters('loadBalancerpublicIPdnsPrefix'),'-',variables('uniqueString'))]"
+        "publicIPdnsPrefix": "[concat(parameters('loadBalancerpublicIPdnsPrefix'),'-',variables('uniqueString'))]"
       }
-      
     },
     "storageSettings": {
       "osDiskStorage": {
@@ -276,7 +278,9 @@
       "virtualNetworkTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'vnet-', parameters('virtualNetworkNewOrExisting'), '.json')]",
       "loadBalancerTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'lb-', parameters('loadBalancerType'), '.json')]",
       "storageAccountTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'storage-account.json')]",
-      "publicIpMultiTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'publicip-multi.json')]"
+      "publicIpMultiTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'publicip-multi.json')]",
+      "networkResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-resources.json')]",
+      "externalLoadBlancerpublicIpTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', variables(variables('publicIpTemplate')))]"
     }
   },
   "resources": [
@@ -303,6 +307,30 @@
           },
           "storageAccountSettings": {
             "value": "[variables('storageSettings')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "network-resources",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersions').deploymentAPIVersion]",
+      "comments": "Virtual network deployment",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('templateUrls').networkResourcesTemplateUrl]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apiVersions": {
+            "value": "[variables('apiVersions')]"
+          },
+          "templateUrls": {
+            "value": "[variables('templateUrls')]"
+          },
+          "networkSettings": {
+            "value": "[variables('networkSettings')]"
           }
         }
       }
