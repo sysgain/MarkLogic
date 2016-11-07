@@ -29,8 +29,17 @@
     "clusterNodeCount": {
       "type": "int",
       "defaultValue": 3,
-      "minValue": 3,
-      "maxValue": 9,
+      "allowedValues": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
       "metadata": {
         "description": "Number of Nodes in the Multi Node Cluster (Multi Node). Minimum 3 Nodes and Maximum 10 Nodes"
       }
@@ -145,7 +154,21 @@
         "internal"
       ],
       "metadata": {
-        "description": "Subnet for the Search Head"
+        "description": "Type of Load Balancer to be used. External or Internal"
+      }
+    },
+    "loadBalancerpublicIPdnsPrefix": {
+      "type": "string",
+      "defaultValue": "mlloadbalancer",
+      "metadata": {
+        "description": "Public DNS prefix for MarkLogic external load balancer"
+      }
+    },
+    "nodepublicIPdnsPrefix": {
+      "type": "string",
+      "defaultValue": "mlnode",
+      "metadata": {
+        "description": "Public DNS prefix for MarkLogic nodes"
       }
     },
     "adminUsername": {
@@ -190,32 +213,28 @@
         "description": "Admin password for MarkLogic Admin Portal"
       }
     },
-    "loadBalancerType": {
-      "type": "string",
-      "defaultValue": "external",
-      "allowedValues": [
-        "external",
-        "internal"
-      ],
-      "metadata": {
-        "description": "Type of Load Balancer to be used. External or Internal"
-      }
-    },
     "baseUrl": {
       "type": "string",
       "metadata": {
         "description": "Base URL for Marketplace",
         "artifactsBaseUrl": ""
       },
-      "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/master"
+      "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldev-nov7"
     }
   },
   "variables": {
+    "uniqueString": "[substring(uniquestring(resourceGroup().id),0,8)]",
+    "publicIpTemplate": "[concat('lbPublicIp',parameters('loadBalancerType'))]",
+    "lbPublicIpexternal": "publicip.json",
+    "lbPublicIpinternal": "publicip-empty.json",
     "apiVersions": {
-      "deploymentAPIVersion": "2015-01-01",
-      "networkAPIVersion": "2015-06-15"
+      "deploymentApiVersion": "2015-01-01",
+      "networkApiVersion": "2015-06-15",
+      "storageApiVersion": "2015-06-15"
     },
     "networkSettings": {
+      "location": "[parameters('location')]",
+      "networkApiVersion": "[variables('apiVersions').networkApiVersion]",
       "virtualNetworkName": "[parameters('virtualNetworkName')]",
       "virtualNetworkExistingRGName": "[parameters('virtualNetworkExistingRGName')]",
       "virtualNetworkAddressPrefix": "[parameters('virtualNetworkAddressPrefix')]",
@@ -224,29 +243,91 @@
           "name": "[parameters('subnet1Name')]",
           "prefix": "[parameters('subnet1Prefix')]"
         }
+      },
+      "count": "[parameters('clusterNodeCount')]",
+      "nodeNetworkSettings": {
+        "location": "[parameters('location')]",
+        "count": "[parameters('clusterNodeCount')]",
+        "networkApiVersion": "[variables('apiVersions').networkApiVersion]",
+        "publicIPAddressName": "mlnodepublicip",
+        "publicIPdnsPrefix": "[concat(parameters('nodepublicIPdnsPrefix'),'-',variables('uniqueString'))]"
+      },
+      "loadBalancerNetworkSettings": {
+        "location": "[parameters('location')]",
+        "networkApiVersion": "[variables('apiVersions').networkApiVersion]",
+        "publicIPAddressName": "mllbpublicip",
+        "publicIPdnsPrefix": "[concat(parameters('loadBalancerpublicIPdnsPrefix'),'-',variables('uniqueString'))]"
       }
     },
-    "virtualNetworkTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'vnet-', parameters('virtualNetworkNewOrExisting'), '.json')]",
-    "loadBalancerTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'lb-', parameters('loadBalancerType'), '.json')]"
+    "storageSettings": {
+      "osDiskStorage": {
+        "location": "[parameters('location')]",
+        "storageAccountType": "Standard_LRS",
+        "storageApiVersion": "[variables('apiVersions').storageApiVersion]",
+        "storageAccountName": "[concat('osdisk',variables('uniqueString'))]"
+      },
+      "dataDiskStorage": {
+        "location": "[parameters('location')]",
+        "storageAccountType": "[parameters('dataDiskStorageAccountType')]",
+        "storageApiVersion": "[variables('apiVersions').storageApiVersion]",
+        "storageAccountName": "[concat('datadisk',variables('uniqueString'))]"
+      }
+    },
+    "templateUrls": {
+      "sharedResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'shared-resources.json')]",
+      "virtualNetworkTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'vnet-', parameters('virtualNetworkNewOrExisting'), '.json')]",
+      "loadBalancerTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'lb-', parameters('loadBalancerType'), '.json')]",
+      "storageAccountTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'storage-account.json')]",
+      "publicIpMultiTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'publicip-multi.json')]",
+      "networkResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-resources.json')]",
+      "externalLoadBlancerpublicIpTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', variables(variables('publicIpTemplate')))]"
+    }
   },
   "resources": [
     {
-      "name": "virtual-network",
+      "name": "shared-resources",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersions').deploymentAPIVersion]",
       "comments": "Virtual network deployment",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('virtualNetworkTemplateUrl')]",
+          "uri": "[variables('templateUrls').sharedResourcesTemplateUrl]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
-          },
           "apiVersions": {
             "value": "[variables('apiVersions')]"
+          },
+          "templateUrls": {
+            "value": "[variables('templateUrls')]"
+          },
+          "networkSettings": {
+            "value": "[variables('networkSettings')]"
+          },
+          "storageAccountSettings": {
+            "value": "[variables('storageSettings')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "network-resources",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersions').deploymentAPIVersion]",
+      "comments": "Virtual network deployment",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('templateUrls').networkResourcesTemplateUrl]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apiVersions": {
+            "value": "[variables('apiVersions')]"
+          },
+          "templateUrls": {
+            "value": "[variables('templateUrls')]"
           },
           "networkSettings": {
             "value": "[variables('networkSettings')]"
