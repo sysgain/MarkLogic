@@ -11,7 +11,6 @@
   },
   "variables": {
     "location": "[parameters('networkSettings').location]",
-    "count": "[parameters('networkSettings').count]",
     "networkApiVersion": "[parameters('networkSettings').networkApiVersion]",
     "publicIPAddressName": "[parameters('networkSettings').publicIPAddressName]",
     "publicIPdnsPrefix": "[parameters('networkSettings').publicIPdnsPrefix]"
@@ -21,16 +20,12 @@
       "comments": "Public IP Address multiple Resource",
       "apiVersion": "[variables('networkApiVersion')]",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[concat(variables('publicIPAddressName'),'-',copyIndex())]",
+      "name": "[variables('publicIPAddressName')]",
       "location": "[variables('location')]",
-      "copy": {
-        "name": "loop",
-        "count": "[variables('count')]"
-      },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat(variables('publicIPdnsPrefix'),copyIndex())]"
+          "domainNameLabel": "[variables('publicIPdnsPrefix')]"
         }
       }
     }
