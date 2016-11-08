@@ -19,7 +19,9 @@
     "loadBalancerBackendPoolName": "[parameters('networkSettings').loadBalancerBackendPoolName]",
     "loadBalancerbId": "[resourceId('Microsoft.Network/loadBalancers',variables('loadBalancerName'))]",
     "lbIpConfigId": "[concat(variables('loadBalancerbId'),'/frontendIPConfigurations/', variables('lbIpConfigName'))]",
-    "clusterPrefix": "[parameters('networkSettings').clusterPrefix]"
+    "clusterPrefix": "[parameters('networkSettings').clusterPrefix]",
+    "subnetRef": "[parameters('networkSettings').subnetRef]",
+    "privateIPAddress": "[parameters('networkSettings').privateIPAddress]",
   },
   "resources": [
     {
@@ -35,7 +37,12 @@
             "properties": {
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
-              }
+              },
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              },
+              "privateIPAddress": "[variables('privateIPAddress')]",
+              "privateIPAllocationMethod": "Static"
             }
           }
         ],
