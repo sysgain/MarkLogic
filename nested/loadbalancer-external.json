@@ -80,24 +80,6 @@
       }
     },
     {
-      "apiVersion": "[variables('apiVersionNetwork')]",
-      "type": "Microsoft.Network/loadBalancers/inboundNatRules",
-      "name": "[concat(variables('loadBalancerName'), '/', 'admin-', parameters('clusterPrefix'), '0')]",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[variables('controllerLbId')]"
-      ],
-      "properties": {
-        "frontendIPConfiguration": {
-          "id": "[variables('controllerLbIpConfigId')]"
-        },
-        "protocol": "tcp",
-        "frontendPort": 2200,
-        "backendPort": 22,
-        "enableFloatingIP": false
-      }
-    },
-    {
       "apiVersion": "[variables('networkApiVersion')]",
       "type": "Microsoft.Network/loadBalancers/inboundNatRules",
       "name": "[concat(variables('loadBalancerName'), '/', 'admin-', variables('clusterPrefix'), copyIndex())]",
