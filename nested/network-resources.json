@@ -24,7 +24,8 @@
   "variables": {
     "deploymentApiVersion": "[parameters('apiVersions').deploymentApiVersion]",
     "publicIpMultiTemplateUrl": "[parameters('templateUrls').publicIpMultiTemplateUrl]",
-    "externalLoadBlancerpublicIpTemplateUrl": "[parameters('templateUrls').externalLoadBlancerpublicIpTemplateUrl]"
+    "externalLoadBlancerpublicIpTemplateUrl": "[parameters('templateUrls').externalLoadBlancerpublicIpTemplateUrl]",
+    "loadBalancerTemplateUrl": "[parameters('templateUrls').loadBalancerTemplateUrl]",
   },
   "resources": [
     {
@@ -46,6 +47,23 @@
     },
     {
       "name": "externalLoadBalancerPublicIPDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('externalLoadBlancerpublicIpTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "networkSettings": {
+            "value": "[parameters('networkSettings').loadBalancerNetworkSettings]"
+          }
+        }
+      }
+    },
+    {
+      "name": "loadBalancerDeployment",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "properties": {
