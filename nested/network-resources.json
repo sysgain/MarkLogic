@@ -32,6 +32,7 @@
       "name": "clusterPublicIPsDeployment",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Deployment of cluster nodes public IPs",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -49,6 +50,7 @@
       "name": "externalLoadBalancerPublicIPDeployment",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Deployment of loadbalancer public IP",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -66,10 +68,14 @@
       "name": "loadBalancerDeployment",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "External or Internal Loadbalancer deployment",
+      "dependsOn": [
+        "externalLoadBalancerPublicIPDeployment"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('externalLoadBlancerpublicIpTemplateUrl')]",
+          "uri": "[variables('loadBalancerTemplateUrl')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
