@@ -99,7 +99,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('virtualNetworkTemplateUrl')]",
+          "uri": "[variables('availabilitySetTemplateUrl')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
