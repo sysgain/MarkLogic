@@ -32,7 +32,8 @@
     "osDiskStorageAccountSettings": "[parameters('storageAccountSettings').osDiskStorage]",
     "dataDiskStorageAccountSettings": "[parameters('storageAccountSettings').dataDiskStorage]",
     "storageAccountTemplateUrl": "[parameters('templateUrls').storageAccountTemplateUrl]",
-    "virtualNetworkTemplateUrl": "[parameters('templateUrls').virtualNetworkTemplateUrl]"
+    "virtualNetworkTemplateUrl": "[parameters('templateUrls').virtualNetworkTemplateUrl]",
+    "availabilitySetTemplateUrl": "[parameters('templateUrls').availabilitySetTemplateUrl]",
 
   },
   "resources": [
@@ -40,6 +41,7 @@
       "name": "osDiskStorageAccountDeployment",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "OS disk storage account deployment",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -57,6 +59,7 @@
       "name": "dataDiskstorageAccountDeployment",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Data disk storage account deployment",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -74,6 +77,25 @@
       "name": "virtualNetworkSubnetsDeployment",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Virtual Network and Subnet deployment",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('virtualNetworkTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "networkSettings": {
+            "value": "[parameters('networkSettings')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "availabilitySetDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Availability set deployment",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
