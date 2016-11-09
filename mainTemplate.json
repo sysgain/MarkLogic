@@ -132,14 +132,14 @@
         "description": "Virtual network address CIDR"
       }
     },
-    "subnet1Name": {
+    "subnetName": {
       "type": "string",
       "defaultValue": "shsubnet",
       "metadata": {
         "description": "Subnet for the Search Head"
       }
     },
-    "subnet1Prefix": {
+    "subnetPrefix": {
       "type": "string",
       "defaultValue": "10.0.1.0/24",
       "metadata": {
@@ -155,6 +155,13 @@
       ],
       "metadata": {
         "description": "Type of Load Balancer to be used. External or Internal"
+      }
+    },
+    "internalLoadBalancerPrivateIP": {
+      "type": "string",
+      "defaultValue": "10.0.1.10",
+      "metadata": {
+        "description": "Static Private Ip for Internal Loadbalancer"
       }
     },
     "loadBalancerpublicIPdnsPrefix": {
@@ -227,6 +234,11 @@
     "publicIpTemplate": "[concat('lbPublicIp',parameters('loadBalancerType'))]",
     "lbPublicIpexternal": "publicip.json",
     "lbPublicIpinternal": "publicip-empty.json",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
+    "subnetRef": "[concat(variables('vnetID'),'/subnets/',parameters ('subnetName'))]",
+    "nodeNicName": "mlnic-",
+    "loadBalancerName": "[concat('markLogiclb','-',parameters('loadBalancerType'))]",
+    "loadBalancerBackendPoolName": "mlBackendPool",
     "apiVersions": {
       "deploymentApiVersion": "2015-01-01",
       "networkApiVersion": "2015-06-15",
@@ -238,25 +250,37 @@
       "virtualNetworkName": "[parameters('virtualNetworkName')]",
       "virtualNetworkExistingRGName": "[parameters('virtualNetworkExistingRGName')]",
       "virtualNetworkAddressPrefix": "[parameters('virtualNetworkAddressPrefix')]",
+      "count": "[parameters('clusterNodeCount')]",
       "subnets": {
         "subnet1": {
-          "name": "[parameters('subnet1Name')]",
-          "prefix": "[parameters('subnet1Prefix')]"
+          "name": "[parameters('subnetName')]",
+          "prefix": "[parameters('subnetPrefix')]"
         }
       },
-      "count": "[parameters('clusterNodeCount')]",
       "nodeNetworkSettings": {
         "location": "[parameters('location')]",
         "count": "[parameters('clusterNodeCount')]",
         "networkApiVersion": "[variables('apiVersions').networkApiVersion]",
         "publicIPAddressName": "mlnodepublicip",
-        "publicIPdnsPrefix": "[concat(parameters('nodepublicIPdnsPrefix'),'-',variables('uniqueString'))]"
+        "publicIPdnsPrefix": "[concat(parameters('nodepublicIPdnsPrefix'),'-',variables('uniqueString'))]",
+        "nicName": "[variables('nodeNicName')]",
+        "subnetRef": "[variables('subnetRef')]",
+        "clusterPrefix": "[parameters('clusterPrefix')]",
+        "loadBalancerName": "[variables('loadBalancerName')]",
+        "loadBalancerBackendPoolName": "[variables('loadBalancerBackendPoolName')]"
       },
       "loadBalancerNetworkSettings": {
         "location": "[parameters('location')]",
         "networkApiVersion": "[variables('apiVersions').networkApiVersion]",
         "publicIPAddressName": "mllbpublicip",
-        "publicIPdnsPrefix": "[concat(parameters('loadBalancerpublicIPdnsPrefix'),'-',variables('uniqueString'))]"
+        "publicIPdnsPrefix": "[concat(parameters('loadBalancerpublicIPdnsPrefix'),'-',variables('uniqueString'))]",
+        "loadBalancerName": "[variables('loadBalancerName')]",
+        "lbIpConfigName": "mlLbfrontendIp",
+        "loadBalancerBackendPoolName": "[variables('loadBalancerBackendPoolName')]",
+        "clusterPrefix": "[parameters('clusterPrefix')]",
+        "count": "[parameters('clusterNodeCount')]",
+        "subnetRef": "[variables('subnetRef')]",
+        "privateIPAddress": "[parameters('internalLoadBalancerPrivateIP')]"
       }
     },
     "storageSettings": {
@@ -276,11 +300,12 @@
     "templateUrls": {
       "sharedResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'shared-resources.json')]",
       "virtualNetworkTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'vnet-', parameters('virtualNetworkNewOrExisting'), '.json')]",
-      "loadBalancerTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'lb-', parameters('loadBalancerType'), '.json')]",
+      "loadBalancerTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'loadbalancer-',parameters('loadBalancerType'),'.json')]",
       "storageAccountTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'storage-account.json')]",
       "publicIpMultiTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'publicip-multi.json')]",
       "networkResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-resources.json')]",
-      "externalLoadBlancerpublicIpTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', variables(variables('publicIpTemplate')))]"
+      "externalLoadBlancerpublicIpTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', variables(variables('publicIpTemplate')))]",
+      "nodeNetworkInterfacesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-interface-multi.json')]"
     }
   },
   "resources": [
@@ -315,7 +340,10 @@
       "name": "network-resources",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersions').deploymentAPIVersion]",
-      "comments": "Virtual network deployment",
+      "comments": "Network resources deployment",
+      "dependsOn": [
+        "shared-resources"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
