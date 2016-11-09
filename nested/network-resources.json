@@ -98,7 +98,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('loadBalancerTemplateUrl')]",
+          "uri": "[variables('nodeNetworkInterfacesTemplateUrl')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
