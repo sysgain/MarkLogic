@@ -25,7 +25,7 @@
     {
       "apiVersion": "[variables('networkApiVersion')]",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(parameters('nicName'), copyindex())]",
+      "name": "[concat(variables('nicName'), copyindex())]",
       "location": "[variables('location')]",
       "comments": "Network Interfaces with loop",
       "copy": {
