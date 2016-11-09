@@ -251,6 +251,9 @@
       "virtualNetworkExistingRGName": "[parameters('virtualNetworkExistingRGName')]",
       "virtualNetworkAddressPrefix": "[parameters('virtualNetworkAddressPrefix')]",
       "count": "[parameters('clusterNodeCount')]",
+      "availabilitySetName": "mlAvailabilitySet",
+      "platformFaultDomainCount": "3",
+      "platformUpdateDomainCount": "20",
       "subnets": {
         "subnet1": {
           "name": "[parameters('subnetName')]",
@@ -305,7 +308,8 @@
       "publicIpMultiTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'publicip-multi.json')]",
       "networkResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-resources.json')]",
       "externalLoadBlancerpublicIpTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', variables(variables('publicIpTemplate')))]",
-      "nodeNetworkInterfacesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-interface-multi.json')]"
+      "nodeNetworkInterfacesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-interface-multi.json')]",
+      "availabilitySetTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'availability-set.json')]"
     }
   },
   "resources": [
