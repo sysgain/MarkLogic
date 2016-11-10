@@ -76,7 +76,7 @@
             }
           },
           {
-            "name": "probe",
+            "name": "health-check",
             "properties": {
               "protocol": "*",
               "sourcePortRange": "*",
@@ -89,7 +89,7 @@
             }
           },
           {
-            "name": "application",
+            "name": "app-services",
             "properties": {
               "protocol": "*",
               "sourcePortRange": "*",
@@ -102,7 +102,7 @@
             }
           },
           {
-            "name": "config",
+            "name": "manage",
             "properties": {
               "protocol": "*",
               "sourcePortRange": "*",
