@@ -1,13 +1,14 @@
 #!/bin/bash
-
-################################################################
-# Use this script to initialize and add one or more hosts to a
-# MarkLogic Server cluster. The first (bootstrap) host for the
-# cluster should already be fully initialized.
-#
-# Usage:  this_command [options] cluster-host joining-host(s)
-#
-################################################################
+######################################################################################################
+#	File         : data-disk-mount.sh
+#	Description  : Use this script to initialize and add one or more hosts to a
+# 				   MarkLogic Server cluster. The first (bootstrap) host for the cluster should already 
+#                  be fully initialized.
+#	Author	     : T S Pradeep Kumar
+#	Date		 : 11/10/2016
+#   Version		 : V1.0
+#   Usage        : 
+######################################################################################################
 
 USER="sysgain"
 PASS="Sysga1n4205!"
@@ -17,13 +18,13 @@ RETRY_INTERVAL=10
 
 NOW=$(date +"%Y-%m-%d")
 
-#############################################################
+######################################################################################################
 # restart_check(hostname, baseline_timestamp, caller_lineno)
 #
 # Use the timestamp service to detect a server restart, given a
 # a baseline timestamp.
 # Returns 0 if restart is detected, exits with an error if not.
-#############################################################
+######################################################################################################
 
 function restart_check {
   LAST_START=`$AUTH_CURL "http://$1:8001/admin/v1/timestamp"`
@@ -39,7 +40,6 @@ function restart_check {
   exit 1
 }
 
-
 if [ $# -ge 2 ]; then
   BOOTSTRAP_HOST=$1
   shift
@@ -49,20 +49,17 @@ else
 fi
 ADDITIONAL_HOSTS=$@
 
-# Curl command for all requests. Suppress progress meter (-s), 
-# but still show errors (-S)
+# Curl command for all requests
 CURL="curl -s -S"
 
-# Curl command when authentication is required, after security
-# is initialized.
+# Curl command when authentication is required
 AUTH_CURL="${CURL} --${AUTH_MODE} --user ${USER}:${PASS}"
 
-
-#######################################################
+#####################################################################################################
 #
 # Add one or more hosts to a cluster.
 # 
-#######################################################
+#####################################################################################################
 
 for JOINING_HOST in $ADDITIONAL_HOSTS; do
   echo "Adding host to cluster: $JOINING_HOST..." >> log-setupadditionalnode-$NOW.log
@@ -79,7 +76,7 @@ for JOINING_HOST in $ADDITIONAL_HOSTS; do
   restart_check $JOINING_HOST $TIMESTAMP $LINENO
   
   #Retrieve the joining host's configuration
-  JOINER_CONFIG=`$CURL -X GET -H "Accept: application/xml" \
+    JOINER_CONFIG=`$CURL -X GET -H "Accept: application/xml" \
         http://${JOINING_HOST}:8001/admin/v1/server-config`
   echo $JOINER_CONFIG | grep -q "^<host"
   if [ "$?" -ne 0 ]; then
@@ -87,10 +84,13 @@ for JOINING_HOST in $ADDITIONAL_HOSTS; do
     exit 1
   fi
   
-  
-  #Send the joining host's config to the bootstrap host, receive
-  #     the cluster config data needed to complete the join. Save the
-  #     response data to cluster-config.zip.
+  #####################################################################################################
+  #
+  # Send the joining host's config to the bootstrap host, receive
+  # the cluster config data needed to complete the join. Save the
+  # response data to cluster-config.zip.
+  #
+  #####################################################################################################
   
   $AUTH_CURL -X POST -o cluster-config.zip -d "group=Default" \
         --data-urlencode "server-config=${JOINER_CONFIG}" \
@@ -104,9 +104,12 @@ for JOINING_HOST in $ADDITIONAL_HOSTS; do
     echo "ERROR: Failed to fetch cluster config from $BOOTSTRAP_HOST" >> log-setupadditionalnode-$NOW.log
     exit 1
   fi
-
+  #####################################################################################################
+  #
   #     Send the cluster config data to the joining host, completing 
   #     the join sequence.
+  #
+  #####################################################################################################  
   
   TIMESTAMP=`$CURL -X POST -H "Content-type: application/zip" \
       --data-binary @./cluster-config.zip \
