@@ -23,7 +23,7 @@
   },
   "variables": {
     "deploymentApiVersion": "[parameters('apiVersions').deploymentApiVersion]",
-    "virtualMachineSettings": "[parameters('apiVersions').virtualMachineSettings]",
+    "virtualMachineSettings": "[parameters('virtualMachineSettings').virtualMachineSettings]",
     "virtualMachineNodeTemplateUrl": "[parameters('templateUrls').virtualMachineNodeTemplateUrl]",
     "availabilitySetTemplateUrl": "[parameters('templateUrls').availabilitySetTemplateUrl]"
   },
