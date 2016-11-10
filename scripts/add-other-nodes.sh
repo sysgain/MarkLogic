@@ -2,12 +2,12 @@
 ######################################################################################################
 #	File         : data-disk-mount.sh
 #	Description  : Use this script to initialize and add one or more hosts to a
-# 				   MarkLogic Server cluster. The first (bootstrap) host for the cluster should already 
-#                  be fully initialized.
+# 				       MarkLogic Server cluster. The first (bootstrap) host for the cluster should already 
+#                be fully initialized.
 #	Author	     : T S Pradeep Kumar
-#	Date		 : 11/10/2016
-#   Version		 : V1.0
-#   Usage        : 
+#	Date		     : 11/10/2016
+# Version		   : V1.0
+# Usage        : 
 ######################################################################################################
 
 USER="sysgain"
