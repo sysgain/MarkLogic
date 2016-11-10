@@ -17,7 +17,7 @@
     "networkSettings": {
       "type": "object",
       "metadata": {
-        "description": ""
+        "description": "Network Settings"
       }
     },
     "storageAccountSettings": {
