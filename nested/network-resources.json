@@ -26,7 +26,8 @@
     "publicIpMultiTemplateUrl": "[parameters('templateUrls').publicIpMultiTemplateUrl]",
     "externalLoadBlancerpublicIpTemplateUrl": "[parameters('templateUrls').externalLoadBlancerpublicIpTemplateUrl]",
     "loadBalancerTemplateUrl": "[parameters('templateUrls').loadBalancerTemplateUrl]",
-    "nodeNetworkInterfacesTemplateUrl": "[parameters('templateUrls').nodeNetworkInterfacesTemplateUrl]"
+    "nodeNetworkInterfacesTemplateUrl": "[parameters('templateUrls').nodeNetworkInterfacesTemplateUrl]",
+    "nodeNetworkSecurityTemplateUrl": "[parameters('templateUrls').nodeNetworkSecurityTemplateUrl]"
   },
   "resources": [
     {
@@ -82,6 +83,28 @@
         "parameters": {
           "networkSettings": {
             "value": "[parameters('networkSettings').loadBalancerNetworkSettings]"
+          }
+        }
+      }
+    },
+    {
+      "name": "nodeNetworkSecurityGroup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Mark Logic Nodes Network Interfaces Deployment",
+      "dependsOn": [
+        "loadBalancerDeployment",
+        "clusterPublicIPsDeployment"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('nodeNetworkSecurityTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "networkSettings": {
+            "value": "[parameters('networkSettings').nodeNetworkSettings]"
           }
         }
       }
