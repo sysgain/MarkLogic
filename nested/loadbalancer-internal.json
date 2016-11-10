@@ -1,0 +1,108 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "networkSettings": {
+      "type": "object",
+      "metadata": {
+        "description": "Network settings object"
+      }
+    }
+  },
+  "variables": {
+    "location": "[parameters('networkSettings').location]",
+    "count": "[parameters('networkSettings').count]",
+    "networkApiVersion": "[parameters('networkSettings').networkApiVersion]",
+    "publicIPAddressName": "[parameters('networkSettings').publicIPAddressName]",
+    "loadBalancerName": "[parameters('networkSettings').loadBalancerName]",
+    "lbIpConfigName": "[parameters('networkSettings').lbIpConfigName]",
+    "loadBalancerBackendPoolName": "[parameters('networkSettings').loadBalancerBackendPoolName]",
+    "loadBalancerbId": "[resourceId('Microsoft.Network/loadBalancers',variables('loadBalancerName'))]",
+    "lbIpConfigId": "[concat(variables('loadBalancerbId'),'/frontendIPConfigurations/', variables('lbIpConfigName'))]",
+    "clusterPrefix": "[parameters('networkSettings').clusterPrefix]",
+    "subnetRef": "[parameters('networkSettings').subnetRef]",
+    "privateIPAddress": "[parameters('networkSettings').privateIPAddress]",
+  },
+  "resources": [
+    {
+      "apiVersion": "[variables('networkApiVersion')]",
+      "name": "[variables('loadBalancerName')]",
+      "type": "Microsoft.Network/loadBalancers",
+      "location": "[variables('location')]",
+      "comments": "Azure External load balancer",
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "[variables('lbIpConfigName')]",
+            "properties": {
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              },
+              "privateIPAddress": "[variables('privateIPAddress')]",
+              "privateIPAllocationMethod": "Static"
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "[variables('loadBalancerBackendPoolName')]"
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "lbRule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('lbIpConfigId')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(variables('loadBalancerbId'), '/backendAddressPools/', variables('loadBalancerBackendPoolName'))]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 8000,
+              "backendPort": 8000,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 5,
+              "probe": {
+                "id": "[concat(variables('loadBalancerbId'),'/probes/mlProbe')]"
+              }
+            }
+          }
+        ],
+        "probes": [
+          {
+            "name": "mlProbe",
+            "properties": {
+              "protocol": "tcp",
+              "port": 7997,
+              "intervalInSeconds": 5,
+              "numberOfProbes": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "[variables('networkApiVersion')]",
+      "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+      "name": "[concat(variables('loadBalancerName'), '/', 'admin-', variables('clusterPrefix'), copyIndex())]",
+      "location": "[variables('location')]",
+      "copy": {
+        "name": "lbNatLoop",
+        "count": "[variables('count')]"
+      },
+      "dependsOn": [
+        "[variables('loadBalancerbId')]"
+      ],
+      "properties": {
+        "frontendIPConfiguration": {
+          "id": "[variables('lbIpConfigId')]"
+        },
+        "protocol": "tcp",
+        "frontendPort": "[copyIndex(2200)]",
+        "backendPort": 8001,
+        "enableFloatingIP": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "networkSettings": {
+      "type": "object",
+      "metadata": {
+        "description": "Network settings object"
+      }
+    }
+  },
+  "variables": {
+    "location": "[parameters('networkSettings').location]",
+    "networkApiVersion": "[parameters('networkSettings').networkApiVersion]",
+    "publicIPAddressName": "[parameters('networkSettings').publicIPAddressName]",
+    "publicIPdnsPrefix": "[parameters('networkSettings').publicIPdnsPrefix]"
+  },
+  "resources": [
+    {
+      "comments": "Public IP Address multiple Resource",
+      "apiVersion": "[variables('networkApiVersion')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('publicIPAddressName')]",
+      "location": "[variables('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[variables('publicIPdnsPrefix')]"
+        }
+      }
+    }
+  ]
+}

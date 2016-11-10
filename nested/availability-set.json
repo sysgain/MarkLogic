@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "networkSettings": {
+      "type": "object",
+      "metadata": {
+        "description": "Network settings object"
+      }
+    }
+  },
+  "variables": {
+    "location": "[parameters('networkSettings').location]",
+    "networkApiVersion": "[parameters('networkSettings').networkApiVersion]",
+    "availabilitySetName": "[parameters('networkSettings').availabilitySetName]",
+    "platformFaultDomainCount": "[parameters('networkSettings').platformFaultDomainCount]",
+    "platformUpdateDomainCount": "[parameters('networkSettings').platformUpdateDomainCount]"
+  },
+  "resources": [
+    {
+      "apiVersion": "[variables('networkApiVersion')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('availabilitySetName')]",
+      "location": "[variables('location')]",
+      "comments": "Availability Set",
+      "properties": {
+        "platformFaultDomainCount": "[variables('platformFaultDomainCount')]",
+        "platformUpdateDomainCount": "[variables('platformUpdateDomainCount')]"
+      }
+    }
+  ]
+}

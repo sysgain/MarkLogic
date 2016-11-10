@@ -1,0 +1,113 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "apiVersions": {
+      "type": "object",
+      "metadata": {
+        "description": "Api versions object"
+      }
+    },
+    "templateUrls": {
+      "type": "object",
+      "metadata": {
+        "description": "Nested template URL's"
+      }
+    },
+    "networkSettings": {
+      "type": "object",
+      "metadata": {
+        "description": "Network Settings"
+      }
+    },
+    "storageAccountSettings": {
+      "type": "object",
+      "metadata": {
+        "description": "Stoarge Account Settings object. Object contains storage account type, storage account name, storage api version, location and storage account count."
+      }
+    }
+  },
+  "variables": {
+    "deploymentApiVersion": "[parameters('apiVersions').deploymentApiVersion]",
+    "osDiskStorageAccountSettings": "[parameters('storageAccountSettings').osDiskStorage]",
+    "dataDiskStorageAccountSettings": "[parameters('storageAccountSettings').dataDiskStorage]",
+    "storageAccountTemplateUrl": "[parameters('templateUrls').storageAccountTemplateUrl]",
+    "virtualNetworkTemplateUrl": "[parameters('templateUrls').virtualNetworkTemplateUrl]",
+    "availabilitySetTemplateUrl": "[parameters('templateUrls').availabilitySetTemplateUrl]",
+
+  },
+  "resources": [
+    {
+      "name": "osDiskStorageAccountDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "OS disk storage account deployment",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('storageAccountTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "storageAccountSettings": {
+            "value": "[variables('osDiskStorageAccountSettings')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "dataDiskstorageAccountDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Data disk storage account deployment",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('storageAccountTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "storageAccountSettings": {
+            "value": "[variables('dataDiskStorageAccountSettings')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "virtualNetworkSubnetsDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Virtual Network and Subnet deployment",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('virtualNetworkTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "networkSettings": {
+            "value": "[parameters('networkSettings')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "availabilitySetDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Availability set deployment",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('availabilitySetTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "networkSettings": {
+            "value": "[parameters('networkSettings')]"
+          }
+        }
+      }
+    }
+  ]
+}

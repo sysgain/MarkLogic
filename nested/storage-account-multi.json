@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "storageAccountSettings": {
+      "type": "object",
+      "metadata": {
+        "description": "Stoarge Account Settings object. Object contains storage account type, storage account name, storage api version, location and storage account count."
+      }
+    }
+  },
+  "variables": {
+    "location": "[parameters('storageAccountSettings').location]",
+    "storageAccountName": "[parameters('storageAccountSettings').storageAccountName]",
+    "storageApiVersion": "[parameters('storageAccountSettings').storageApiVersion]",
+    "storageAccountType": "[parameters('storageAccountSettings').storageAccountType]",
+    "count": "[parameters('storageAccountSettings').count]"
+  },
+  "resources": [
+    {
+      "comments": "Storage Account Resource",
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[concat(variables('storageAccountName'),copyIndex())]",
+      "apiVersion": "[variables('storageApiVersion')]",
+      "location": "[variables('location')]",
+      "copy": {
+        "name": "storageAccountLoop",
+        "count": "[variables('count')]"
+      },
+      "properties": {
+        "accountType": "[variables('storageAccountType')]"
+      }
+    }
+  ]
+}
