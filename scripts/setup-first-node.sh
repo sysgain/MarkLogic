@@ -1,20 +1,23 @@
-#######################################################################################################
+######################################################################################################
 #	File         : data-disk-mount.sh
-#	Description  : This script will set up the first node in the cluster
+#	Description  : This script will setup the head/first node in the cluster
 #	Author	     : T S Pradeep Kumar
-#	Date         : 11/09/2016
-#   Version          : V1.0
+#	Date		 : 11/9/2016
+#   Version		 : V1.0
 ######################################################################################################
 
 #!/bin/bash
 
 BOOTSTRAP_HOST="localhost"
-USER="tspadmin"
-PASS="solojava@5657"
+USER="sysgain"
+PASS="Sysga1n4205!"
 AUTH_MODE="anyauth"
 SEC_REALM="public"
 N_RETRY=5
 RETRY_INTERVAL=10
+
+#Log file to record all the activities
+NOW=$(date +"%Y-%m-%d")
 
 #############################################################
 # restart_check(hostname, baseline_timestamp, caller_lineno)
@@ -33,30 +36,9 @@ function restart_check {
       return 0
     fi
   done
-  echo "ERROR: Line $3: Failed to restart $1"
+  echo "ERROR: Line $3: Failed to restart $1" >> log-setup-first-node-$NOW.log
   exit 1
 }
-
-#######################################################
-# Code to Parse the command line
-#######################################################
-
-OPTIND=1
-while getopts ":a:p:r:u:" opt; do
-  case "$opt" in
-    a) AUTH_MODE=$OPTARG ;;
-    p) PASS=$OPTARG ;;
-    r) SEC_REALM=$OPTARG ;;
-    u) USER=$OPTARG ;;
-    \?) echo "Unrecognized option: -$OPTARG" >&2; exit 1 ;;
-  esac
-done
-shift $((OPTIND-1))
-
-if [ $# -ge 1 ]; then
-  BOOTSTRAP_HOST=$1
-  shift
-fi
 
 # Suppress progress meter, but still show errors
 CURL="curl -s -S"
@@ -72,7 +54,7 @@ AUTH_CURL="${CURL} --${AUTH_MODE} --user ${USER}:${PASS}"
 ###################################################################
 
 # (1) Initialize the server
-echo "Initializing $BOOTSTRAP_HOST..."
+echo "Initializing $BOOTSTRAP_HOST..." >> log-setup-first-node-$NOW.log
 $CURL -X POST -d "" http://${BOOTSTRAP_HOST}:8001/admin/v1/init
 sleep 10
 
@@ -85,12 +67,12 @@ TIMESTAMP=`$CURL -X POST \
    | grep "last-startup" \
    | sed 's%^.*<last-startup.*>\(.*\)</last-startup>.*$%\1%'`
 if [ "$TIMESTAMP" == "" ]; then
-  echo "ERROR: Failed to get instance-admin timestamp." >&2
+  echo "ERROR: Failed to get instance-admin timestamp." >&2 >> log-setup-first-node-$NOW.log
   exit 1
 fi
 
 # Test for successful restart
 restart_check $BOOTSTRAP_HOST $TIMESTAMP $LINENO
 
-echo "Initialization complete for $BOOTSTRAP_HOST..."
+echo "Initialization complete for $BOOTSTRAP_HOST..." >> log-setup-first-node-$NOW.log
 exit 0
