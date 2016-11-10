@@ -298,6 +298,7 @@
         "publicIPAddressName": "mlnodepublicip",
         "publicIPdnsPrefix": "[concat(parameters('nodepublicIPdnsPrefix'),'-',variables('uniqueString'))]",
         "nicName": "[variables('nodeNicName')]",
+        "networkSecurityGroupName": "mlnsg",
         "subnetRef": "[variables('subnetRef')]",
         "clusterPrefix": "[parameters('clusterPrefix')]",
         "loadBalancerName": "[variables('loadBalancerName')]",
@@ -360,6 +361,7 @@
       "networkResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-resources.json')]",
       "externalLoadBlancerpublicIpTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', variables(variables('publicIpTemplate')))]",
       "nodeNetworkInterfacesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-interface-multi.json')]",
+      "nodeNetworkSecurityTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-security-group.json')]",
       "availabilitySetTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'availability-set.json')]",
       "virtualMachineDeploymentTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'virtual-machine-deployment-',variables(variables('nodeVmSize')).nodes,'.json')]",
       "virtualMachineTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'virtual-machine-',parameters('authenticationType'),'.json')]"
