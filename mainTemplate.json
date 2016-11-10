@@ -10,7 +10,7 @@
     },
     "clusterPrefix": {
       "type": "string",
-      "defaultValue": "ucpclus",
+      "defaultValue": "ml",
       "metadata": {
         "description": "MarkLogic Cluster Prefix"
       }
@@ -180,7 +180,7 @@
     },
     "adminUsername": {
       "type": "string",
-      "defaultValue": "ucpadmin",
+      "defaultValue": "sysgain",
       "metadata": {
         "description": "OS Admin User Name for MarkLogic Nodes"
       }
@@ -192,9 +192,9 @@
         "description": "Authentication type"
       }
     },
-    "adminPassword": {
+    "adminPasswordOrSshKey": {
       "type": "securestring",
-      "defaultValue": "",
+      "defaultValue": "Sysga1n4205!",
       "metadata": {
         "description": "OS Admin password"
       }
@@ -208,14 +208,14 @@
     },
     "adminUsernameMarkLogicPortal": {
       "type": "string",
-      "defaultValue": "ucpadmin",
+      "defaultValue": "sysgain",
       "metadata": {
         "description": "Admin User Name for MarkLogic Admin Portal"
       }
     },
     "adminPasswordMarkLogicPortal": {
       "type": "securestring",
-      "defaultValue": "",
+      "defaultValue": "Sysga1n4205!",
       "metadata": {
         "description": "Admin password for MarkLogic Admin Portal"
       }
@@ -239,10 +239,48 @@
     "nodeNicName": "mlnic-",
     "loadBalancerName": "[concat('markLogiclb','-',parameters('loadBalancerType'))]",
     "loadBalancerBackendPoolName": "mlBackendPool",
+    "nodeVmSize": "[concat('cluster-size-',parameters('clusterNodeCount'))]",
+    "cluster-size-1": {
+      "vmSize": "[parameters('singleNodeSize')]",
+      "nodes": "singlenode"
+    },
+    "cluster-size-3": {
+      "vmSize": "[parameters('clusterNodeSize')]",
+      "nodes": "cluster"
+    },
+    "cluster-size-4": {
+      "vmSize": "[parameters('clusterNodeSize')]",
+      "nodes": "cluster"
+    },
+    "cluster-size-5": {
+      "vmSize": "[parameters('clusterNodeSize')]",
+      "nodes": "cluster"
+    },
+    "cluster-size-6": {
+      "vmSize": "[parameters('clusterNodeSize')]",
+      "nodes": "cluster"
+    },
+    "cluster-size-7": {
+      "vmSize": "[parameters('clusterNodeSize')]",
+      "nodes": "cluster"
+    },
+    "cluster-size-8": {
+      "vmSize": "[parameters('clusterNodeSize')]",
+      "nodes": "cluster"
+    },
+    "cluster-size-9": {
+      "vmSize": "[parameters('clusterNodeSize')]",
+      "nodes": "cluster"
+    },
+    "cluster-size-10": {
+      "vmSize": "[parameters('clusterNodeSize')]",
+      "nodes": "cluster"
+    },
     "apiVersions": {
       "deploymentApiVersion": "2015-01-01",
       "networkApiVersion": "2015-06-15",
-      "storageApiVersion": "2015-06-15"
+      "storageApiVersion": "2015-06-15",
+      "computeApiVersion": "2015-06-15"
     },
     "networkSettings": {
       "location": "[parameters('location')]",
@@ -300,6 +338,26 @@
         "storageAccountName": "[concat('datadisk',variables('uniqueString'))]"
       }
     },
+    "virtualMachineSettings": {
+      "location": "[parameters('location')]",
+      "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
+      "vmName": "[parameters('clusterPrefix')]",
+      "vmSize": "[variables(variables('nodeVmSize')).vmSize]",
+      "authenticationType": "password",
+      "adminUsername": "[parameters('adminUsername')]",
+      "adminPasswordOrSshKey": "[parameters('adminPasswordOrSshKey')]",
+      "imagePublisher": "marklogic",
+      "imageOffer": "marklogic_80-preview",
+      "imageSKU": "ml_centos",
+      "imageVersion": "latest",
+      "osDiskStorageAccountName": "[variables('storageSettings').osDiskStorage.storageAccountName]",
+      "dataDiskStorageAccountName": "[variables('storageSettings').dataDiskStorage.storageAccountName]",
+      "vmStorageAccountContainerName": "vhds",
+      "networkInterfaceName": "[variables('nodeNicName')]",
+      "dataDiskSizeGB": "1023",
+      "count": "[parameters('clusterNodeCount')]",
+      "availabilitySetName": "[variables('networkSettings').availabilitySetName]"
+    },
     "templateUrls": {
       "sharedResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'shared-resources.json')]",
       "virtualNetworkTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'vnet-', parameters('virtualNetworkNewOrExisting'), '.json')]",
@@ -309,7 +367,9 @@
       "networkResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-resources.json')]",
       "externalLoadBlancerpublicIpTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', variables(variables('publicIpTemplate')))]",
       "nodeNetworkInterfacesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-interface-multi.json')]",
-      "availabilitySetTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'availability-set.json')]"
+      "availabilitySetTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'availability-set.json')]",
+      "virtualMachineDeploymentTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'virtual-machine-deployment-',variables(variables('nodeVmSize')).nodes,'.json')]",
+      "virtualMachineTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'virtual-machine-',parameters('authenticationType'),'.json')]"
     }
   },
   "resources": [
@@ -363,6 +423,33 @@
           },
           "networkSettings": {
             "value": "[variables('networkSettings')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "virtual-machines",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersions').deploymentAPIVersion]",
+      "comments": "Virtaul machines and Extensions deployment",
+      "dependsOn": [
+        "network-resources"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('templateUrls').virtualMachineDeploymentTemplateUrl]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apiVersions": {
+            "value": "[variables('apiVersions')]"
+          },
+          "templateUrls": {
+            "value": "[variables('templateUrls')]"
+          },
+          "virtualMachineSettings": {
+            "value": "[variables('virtualMachineSettings')]"
           }
         }
       }
