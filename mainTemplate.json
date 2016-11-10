@@ -15,17 +15,6 @@
         "description": "MarkLogic Cluster Prefix"
       }
     },
-    "clusterType": {
-      "type": "string",
-      "defaultValue": "MultiNode",
-      "allowedValues": [
-        "SingleNode",
-        "MultiNode"
-      ],
-      "metadata": {
-        "description": "MarkLogic Cluster Type. Multi or Single Node"
-      }
-    },
     "clusterNodeCount": {
       "type": "int",
       "defaultValue": 3,
@@ -188,6 +177,10 @@
     "authenticationType": {
       "type": "string",
       "defaultValue": "password",
+      "allowedValues": [
+        "password",
+        "sshkey"
+      ],
       "metadata": {
         "description": "Authentication type"
       }
