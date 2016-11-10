@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "networkSettings": {
+      "type": "object",
+      "metadata": {
+        "description": "Network settings object"
+      }
+    }
+  },
+  "variables": {
+    "location": "[parameters('networkSettings').location]",
+    "networkApiVersion": "[parameters('networkSettings').networkApiVersion]",
+    "virtualNetworkName": "[parameters('networkSettings').virtualNetworkName]",
+    "virtualNetworkAddressPrefix": "[parameters('networkSettings').virtualNetworkAddressPrefix]",
+    "virtualNetworkId": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
+    "subnet1Name": "[parameters('networkSettings').subnets.subnet1.name]",
+    "subnet1Prefix": "[parameters('networkSettings').subnets.subnet1.prefix]",
+    "subnet1Ref": "[concat(variables('virtualNetworkId'),'/subnets/',variables('subnet1Name'))]"
+  },
+  "resources": [
+    {
+      "apiVersion": "[variables('networkApiVersion')]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[variables('virtualNetworkName')]",
+      "comments": "Virtual network with one subnet",
+      "location": "[variables('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('virtualNetworkAddressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('subnet1Name')]",
+            "properties": {
+              "addressPrefix": "[variables('subnet1Prefix')]"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+    "subnet1Ref": {
+      "value": "[variables('subnet1Ref')]",
+      "type": "string"
+    }
+  }
+}
