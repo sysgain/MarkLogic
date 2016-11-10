@@ -24,7 +24,7 @@
   "variables": {
     "deploymentApiVersion": "[parameters('apiVersions').deploymentApiVersion]",
     "virtualMachineSettings": "[parameters('virtualMachineSettings')]",
-    "virtualMachineNodeTemplateUrl": "[parameters('templateUrls').virtualMachineNodeTemplateUrl]"
+    "virtualMachineTemplateUrl": "[parameters('templateUrls').virtualMachineTemplateUrl]"
   },
   "resources": [
     {
@@ -35,7 +35,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('virtualMachineNodeTemplateUrl')]",
+          "uri": "[variables('virtualMachineTemplateUrl')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
