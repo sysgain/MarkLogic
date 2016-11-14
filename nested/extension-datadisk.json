@@ -35,10 +35,10 @@
         "typeHandlerVersion": "2.0",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "fileUris": "[variables('customScriptsUrl')]",
-          "protectedSettings": {
-            "commandToExecute": "[variables('commandToExecute')]"
-          }
+          "fileUris": "[variables('customScriptsUrl')]"
+        },
+        "protectedSettings": {
+          "commandToExecute": "[variables('commandToExecute')]"
         }
       }
     }
