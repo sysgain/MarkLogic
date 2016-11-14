@@ -25,7 +25,7 @@
     "deploymentApiVersion": "[parameters('apiVersions').deploymentApiVersion]",
     "virtualMachineSettings": "[parameters('virtualMachineSettings')]",
     "virtualMachineTemplateUrl": "[parameters('templateUrls').virtualMachineTemplateUrl]",
-    "dataDiskMountScriptTemplateUrl": "[parameters('templateUrls').dataDiskMountScriptTemplateUrl]"
+    "virtualMachineExtensionMultiTemplateUrl": "[parameters('templateUrls').virtualMachineExtensionMultiTemplateUrl]"
   },
   "resources": [
     {
@@ -57,7 +57,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('dataDiskMountScriptTemplateUrl')]",
+          "uri": "[variables('virtualMachineExtensionMultiTemplateUrl')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
