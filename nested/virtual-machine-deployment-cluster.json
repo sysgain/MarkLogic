@@ -47,7 +47,7 @@
       }
     },
     {
-      "name": "virtualMachineExtensionDeployment",
+      "name": "virtualMachineDataDiskExtensionDeployment",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('deploymentApiVersion')]",
       "comments": "Virtual machine extension deployment - Data disk",
@@ -63,6 +63,28 @@
         "parameters": {
           "virtualMachineSettings": {
             "value": "[variables('virtualMachineSettings').dataDiskExtension]"
+          }
+        }
+      }
+    },
+    {
+      "name": "virtualMachineFirstNodeConfigExtensionDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Virtual machine extension deployment - First Node Config",
+      "dependsOn": [
+        "virtualMachineDeployment",
+        "virtualMachineDataDiskExtensionDeployment"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('virtualMachineExtensionMultiTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualMachineSettings": {
+            "value": "[variables('virtualMachineSettings').firstNodeConfigExtension]"
           }
         }
       }

@@ -16,12 +16,13 @@
     "vmExtensionName": "[parameters('virtualMachineSettings').vmExtensionName]",
     "count": "[parameters('virtualMachineSettings').count]",
     "customScriptsUrl": "[parameters('virtualMachineSettings').customScriptsUrl]",
-    "commandToExecute": "[parameters('virtualMachineSettings').commandToExecute]"
+    "commandToExecute": "[parameters('virtualMachineSettings').commandToExecute]",
+    "indexStart": "[parameters('virtualMachineSettings').indexStart]"
   },
   "resources": [
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmName'),copyIndex(),'/',variables('vmExtensionName'))]",
+      "name": "[concat(variables('vmName'),'copyIndex(',variables('indexStart'),')','/',variables('vmExtensionName'))]",
       "apiVersion": "[variables('computeApiVersion')]",
       "location": "[variables('location')]",
       "comments": "Virtual machine extension",
