@@ -25,7 +25,8 @@
     "deploymentApiVersion": "[parameters('apiVersions').deploymentApiVersion]",
     "virtualMachineSettings": "[parameters('virtualMachineSettings')]",
     "virtualMachineTemplateUrl": "[parameters('templateUrls').virtualMachineTemplateUrl]",
-    "virtualMachineExtensionMultiTemplateUrl": "[parameters('templateUrls').virtualMachineExtensionMultiTemplateUrl]"
+    "virtualMachineExtensionMultiIndex0TemplateUrl": "[parameters('templateUrls').virtualMachineExtensionMultiIndex0TemplateUrl]",
+    "virtualMachineExtensionMultiIndex1TemplateUrl": "[parameters('templateUrls').virtualMachineExtensionMultiIndex1TemplateUrl]"
   },
   "resources": [
     {
@@ -57,7 +58,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('virtualMachineExtensionMultiTemplateUrl')]",
+          "uri": "[variables('virtualMachineExtensionMultiIndex0TemplateUrl')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -79,7 +80,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('virtualMachineExtensionMultiTemplateUrl')]",
+          "uri": "[variables('virtualMachineExtensionMultiIndex0TemplateUrl')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
