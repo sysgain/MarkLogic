@@ -8,21 +8,21 @@
 
 #!/bin/bash
 
-#BOOTSTRAP_HOST=$1
-#USER=$2
-#PASS=$3
-#AUTH_MODE=$4
-#SEC_REALM=$5
-#N_RETRY=$6
-#RETRY_INTERVAL=$7
+BOOTSTRAP_HOST=$1
+USER=$2
+PASS=$3
+AUTH_MODE=$4
+SEC_REALM=$5
+N_RETRY=$6
+RETRY_INTERVAL=$7
 
-BOOTSTRAP_HOST="localhost"
-USER="sysgain1"
-PASS="Sysga1n4205!"
-AUTH_MODE="anyauth"
-SEC_REALM="public"
-N_RETRY=5
-RETRY_INTERVAL=10
+#BOOTSTRAP_HOST="localhost"
+#USER="sysgain1"
+#PASS="Sysga1n4205!"
+#AUTH_MODE="anyauth"
+#SEC_REALM="public"
+#N_RETRY=5
+#RETRY_INTERVAL=10
 
 #Log file to record all the activities
 NOW=$(date +"%Y-%m-%d")
