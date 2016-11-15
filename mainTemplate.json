@@ -58,8 +58,9 @@
     },
     "clusterNodeSize": {
       "type": "string",
-      "defaultValue": "Standard_DS13_v2",
+      "defaultValue": "Standard_DS3_v2",
       "allowedValues": [
+      	"Standard_DS3_v2",
         "Standard_DS13",
         "Standard_DS14",
         "Standard_DS13_v2",
@@ -350,7 +351,40 @@
       "networkInterfaceName": "[variables('nodeNicName')]",
       "dataDiskSizeGB": "1023",
       "count": "[parameters('clusterNodeCount')]",
-      "availabilitySetName": "[variables('networkSettings').availabilitySetName]"
+      "availabilitySetName": "[variables('networkSettings').availabilitySetName]",
+      "dataDiskExtension": {
+        "location": "[parameters('location')]",
+        "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
+        "vmName": "[parameters('clusterPrefix')]",
+        "count": "[parameters('clusterNodeCount')]",
+        "vmExtensionName": "extension",
+        "customScriptsUrl": [
+          "[variables('templateUrls').dataDiskMountScriptUrl]"
+        ],
+        "commandToExecute": "sh data-disk-mount.sh"
+      },
+      "firstNodeConfigExtension": {
+        "location": "[parameters('location')]",
+        "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
+        "vmName": "[parameters('clusterPrefix')]",
+        "count": 1,
+        "vmExtensionName": "extension",
+        "customScriptsUrl": [
+          "[variables('templateUrls').firstNodeConfigScriptUrl]"
+        ],
+        "commandToExecute": "[concat('sh setup-first-node.sh localhost', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ','anyauth public 5 10')]"
+      },
+      "additionalNodesConfigExtension": {
+        "location": "[parameters('location')]",
+        "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
+        "vmName": "[parameters('clusterPrefix')]",
+        "count": "[sub(parameters('clusterNodeCount'),1)]",
+        "vmExtensionName": "extension",
+        "customScriptsUrl": [
+          "[variables('templateUrls').additionalNodesConfigScriptUrl]"
+        ],
+        "commandToExecute": "[concat('sh setup-additional-nodes.sh -u', ' ', parameters('adminUsernameMarkLogicPortal'), '-p', ' ',  parameters('adminPasswordMarkLogicPortal'), '-a', ' ', 'anyauth', )]"
+      }
     },
     "templateUrls": {
       "sharedResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'shared-resources.json')]",
@@ -364,7 +398,12 @@
       "nodeNetworkSecurityTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-security-group.json')]",
       "availabilitySetTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'availability-set.json')]",
       "virtualMachineDeploymentTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'virtual-machine-deployment-',variables(variables('nodeVmSize')).nodes,'.json')]",
-      "virtualMachineTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'virtual-machine-',parameters('authenticationType'),'.json')]"
+      "virtualMachineTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'virtual-machine-',parameters('authenticationType'),'.json')]",
+      "virtualMachineExtensionMultiIndex0TemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-0.json')]",
+      "virtualMachineExtensionMultiIndex1TemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-1.json')]",
+      "dataDiskMountScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'data-disk-mount.sh')]",
+      "firstNodeConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-first-node.sh')]",
+      "additionalNodesConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-additional-nodes.sh')]"
     }
   },
   "resources": [
