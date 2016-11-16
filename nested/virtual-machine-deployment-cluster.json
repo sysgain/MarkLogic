@@ -112,6 +112,27 @@
           }
         }
       }
+    },
+    {
+      "name": "markLogicDataBaseExtensionDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Virtual machine extension deployment - DataBase",
+      "dependsOn": [
+        "virtualMachineAdditionalNodesConfigExtensionDeployment"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('virtualMachineExtensionMultiIndex0TemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualMachineSettings": {
+            "value": "[variables('virtualMachineSettings').createDataBaseExtension]"
+          }
+        }
+      }
     }
   ]
 }
