@@ -220,7 +220,7 @@
         "description": "Base URL for Marketplace",
         "artifactsBaseUrl": ""
       },
-      "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldev-nov7"
+      "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldev-nov20"
     }
   },
   "variables": {
@@ -383,7 +383,7 @@
         "customScriptsUrl": [
           "[variables('templateUrls').additionalNodesConfigScriptUrl]"
         ],
-        "commandToExecute": "[concat('sh setup-additional-nodes.sh -u', ' ', parameters('adminUsernameMarkLogicPortal'), '-p', ' ',  parameters('adminPasswordMarkLogicPortal'), '-a', ' ', 'anyauth', )]"
+        "commandToExecute": "[concat('sh setup-additional-nodes.sh',' ', parameters('clusterPrefix'), '0', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ','anyauth 5 10 localhost')]"
       }
     },
     "templateUrls": {
