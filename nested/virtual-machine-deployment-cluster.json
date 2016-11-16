@@ -89,6 +89,29 @@
           }
         }
       }
+    },
+    {
+      "name": "virtualMachineAdditionalNodesConfigExtensionDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Virtual machine extension deployment - Other Nodes Config",
+      "dependsOn": [
+        "virtualMachineDeployment",
+        "virtualMachineDataDiskExtensionDeployment",
+        "virtualMachineFirstNodeConfigExtensionDeployment"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('virtualMachineExtensionMultiIndex1TemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualMachineSettings": {
+            "value": "[variables('virtualMachineSettings').additionalNodesConfigExtension]"
+          }
+        }
+      }
     }
   ]
 }
