@@ -26,7 +26,8 @@
     "virtualMachineSettings": "[parameters('virtualMachineSettings')]",
     "virtualMachineTemplateUrl": "[parameters('templateUrls').virtualMachineTemplateUrl]",
     "virtualMachineExtensionMultiIndex0TemplateUrl": "[parameters('templateUrls').virtualMachineExtensionMultiIndex0TemplateUrl]",
-    "virtualMachineExtensionMultiIndex1TemplateUrl": "[parameters('templateUrls').virtualMachineExtensionMultiIndex1TemplateUrl]"
+    "virtualMachineExtensionMultiIndex1TemplateUrl": "[parameters('templateUrls').virtualMachineExtensionMultiIndex1TemplateUrl]",
+    "virtualMachineExtensionMultiIndex0ForestTemplateUrl": "[parameters('templateUrls').virtualMachineExtensionMultiIndex0ForestTemplateUrl]"
   },
   "resources": [
     {
@@ -130,6 +131,27 @@
         "parameters": {
           "virtualMachineSettings": {
             "value": "[variables('virtualMachineSettings').createDataBaseExtension]"
+          }
+        }
+      }
+    },
+    {
+      "name": "markLogicForestExtensionDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Virtual machine extension deployment - Forest",
+      "dependsOn": [
+        "markLogicDataBaseExtensionDeployment"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('virtualMachineExtensionMultiIndex0ForestTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualMachineSettings": {
+            "value": "[variables('virtualMachineSettings').createForestExtension]"
           }
         }
       }
