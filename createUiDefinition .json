@@ -1,0 +1,378 @@
+{
+    "handler": "Microsoft.Compute.MultiVm",
+    "version": "0.0.1-preview",
+    "parameters": {
+        "basics": [
+            {
+                "name": "clusterName",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Cluster Prefix",
+                "toolTip": "Unique identifier for the MarkLogic cluster.",
+                "constraints": {
+                    "required": true,
+                    "regex": "^[a-z0-9]{3,24}$",
+                    "validationMessage": "Cluster names must be between 3 and 24 characters long, and can contain only numbers and lowercase letters."
+                }
+            },
+            {
+                "name": "adminUsername",
+                "type": "Microsoft.Compute.UserNameTextBox",
+                "label": "Username",
+                "toolTip": "Admin username for the virtual machines. Same Credientials is to SSH to the box.",
+                "constraints": {
+                    "required": true,
+                    "regex": "^[A-z][A-z0-9]{4,15}$",
+                    "validationMessage": "Admin username between 5 and 16 characters long, and can contain only letters and numbers."
+                },
+                "osPlatform": "Linux"
+            },
+            {
+                "name": "SSHCredentials",
+                "type": "Microsoft.Compute.CredentialsCombo",
+                "label": {
+                    "authenticationType": "Authentication type",
+                    "password": "Password",
+                    "confirmPassword": "Confirm password",
+                    "sshPublicKey": "SSH public key"
+                },
+                "toolTip": {
+                    "authenticationType": "Authentication Type for the admin user",
+                    "password": "OS Admin User Password",
+                    "sshPublicKey": "SSH Public Key for the Admin User"
+                },
+                "constraints": {
+                    "required": true
+                },
+                "options": {
+                    "hideConfirmation": false
+                },
+                "osPlatform": "Linux"
+            }
+        ],
+        "steps": [
+            {
+                "name": "nodesSettings",
+                "label": "Node settings",
+                "subLabel": {
+                    "preValidation": "Configure the node",
+                    "postValidation": "Done"
+                },
+                "bladeTitle": "Node settings",
+                "elements": [
+                    {
+                        "name": "clusterType",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "MarkLogic Cluster Type.",
+                        "defaultValue": "Single node",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Single node",
+                                    "value": "SingleNode"
+                                },
+                                {
+                                    "label": "Multi Node",
+                                    "value": "MultiNode"
+                                }
+                            ],
+                            "required": true
+                        }
+                    },
+                    {
+                        "name": "singleNodeVmSize",
+                        "type": "Microsoft.Compute.SizeSelector",
+                        "label": "VM size",
+                        "toolTip": "Select VM Size (will use 1 data disks)",
+                        "recommendedSizes": [
+                            "Standard_DS11",
+                            "Standard_DS11_v2",
+                            "Standard_GS1"
+                        ],
+                        "constraints": {
+                            "required": "[equals(steps('nodesSettings').clusterType, 'SingleNode')]",
+                            "allowedSizes": [
+                                "Standard_DS11",
+                                "Standard_DS12",
+                                "Standard_DS13",
+                                "Standard_DS14",
+                                "Standard_DS11_v2",
+                                "Standard_DS12_v2",
+                                "Standard_DS13_v2",
+                                "Standard_DS14_v2",
+                                "Standard_DS15_v2",
+                                "Standard_GS1",
+                                "Standard_GS2",
+                                "Standard_GS3",
+                                "Standard_GS4",
+                                "Standard_GS5"
+                            ]
+                        },
+                        "osPlatform": "Linux",
+                        "count": 1,
+                        "visible": "[equals(steps('nodesSettings').clusterType, 'SingleNode')]"
+                    },
+                    {
+                        "name": "multiNodeVmSize",
+                        "type": "Microsoft.Compute.SizeSelector",
+                        "label": "VM size",
+                        "toolTip": "Select VM Size (will use 1 data disks)",
+                        "recommendedSizes": [
+                            "Standard_DS13",
+                            "Standard_DS13_v2",
+                            "Standard_GS3"
+                        ],
+                        "constraints": {
+                            "required": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]",
+                            "allowedSizes": [
+                                "Standard_DS13",
+                                "Standard_DS14",
+                                "Standard_DS13_v2",
+                                "Standard_DS14_v2",
+                                "Standard_DS15_v2",
+                                "Standard_GS3",
+                                "Standard_GS4",
+                                "Standard_GS5"
+                            ]
+                        },
+                        "osPlatform": "Linux",
+                        "count": 1,
+                        "visible": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
+                    },
+                    {
+                        "name": "multiNodeVmCount",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Number of Nodes",
+                        "defaultValue": "3",
+                        "toolTip": "Number of nodes in the cluster",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "3",
+                                    "value": 3
+                                },
+                                {
+                                    "label": "4",
+                                    "value": 4
+                                },
+                                {
+                                    "label": "5",
+                                    "value": 5
+                                },
+                                {
+                                    "label": "6",
+                                    "value": 6
+                                },
+                                {
+                                    "label": "7",
+                                    "value": 7
+                                },
+                                {
+                                    "label": "8",
+                                    "value": 8
+                                },
+                                {
+                                    "label": "9",
+                                    "value": 9
+                                },
+                                {
+                                    "label": "10",
+                                    "value": 10
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('nodesSettings').clusterType, 'SingleNode')]"
+                    }
+                ]
+            },
+            {
+                "name": "markLogicPortal",
+                "label": "MarkLogic portal",
+                "subLabel": {
+                    "preValidation": "Required",
+                    "postValidation": "Done"
+                },
+                "bladeTitle": "Portal Credentials",
+                "elements": [
+                    {
+                        "name": "adminUsernameMarkLogicPortal",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "MarkLogic Portal Username",
+                        "toolTip": "The Username for MarkLogic Portal.",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[A-z][A-z0-9]{4,15}$",
+                            "validationMessage": "Admin username between 5 and 16 characters long, and can contain only letters and numbers."
+                        }
+                    },
+                    {
+                        "name": "adminPasswordMarkLogicPortal",
+                        "type": "Microsoft.Common.PasswordBox",
+                        "label": "MarkLogic Portal Password",
+                        "toolTip": "The password for MarkLogic Portal.",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\\d\\W])|(?=.*\\W)(?=.*\\d))|(?=.*\\W)(?=.*[A-Z])(?=.*\\d)).{6,30}$",
+                            "validationMessage": "The password must be between 6 and 30 characters long, and contain characters from at least 3 of the following groups: uppercase characters, lowercase characters, numbers, and special characters."
+                        }
+                    },
+                    {
+                        "name": "MarkLogicLicenseKey",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "MarkLogic License Key",
+                        "toolTip": "The Username for MarkLogic Portal.",
+                        "constraints": {
+                            "required": true
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "networkSettings",
+                "label": "Network Settings",
+                "subLabel": {
+                    "preValidation": "Required",
+                    "postValidation": "Done"
+                },
+                "bladeTitle": "Network Settings",
+                "elements": [
+                    {
+                        "name": "vnetSpec",
+                        "type": "Microsoft.Network.VirtualNetworkCombo",
+                        "label": {
+                            "virtualNetwork": "Virtual network",
+                            "subnets": "Subnets"
+                        },
+                        "toolTip": {
+                            "virtualNetwork": "",
+                            "subnets": ""
+                        },
+                        "defaultValue": {
+                            "name": "markLogicVnet",
+                            "addressPrefixSize": "/16"
+                        },
+                        "constraints": {
+                            "minAddressPrefixSize": "/29"
+                        },
+                        "subnets": {
+                            "subnet1": {
+                                "label": "Subnet",
+                                "defaultValue": {
+                                    "name": "shsubnet",
+                                    "addressPrefixSize": "/24"
+                                },
+                                "constraints": {
+                                    "minAddressPrefixSize": "/29",
+                                    "minAddressCount": 1,
+                                    "requireContiguousAddresses": true
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "loadBalancerType",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Load Balancer Type",
+                        "defaultValue": "external",
+                        "toolTip": "Type of Load Balancer to be used. External or Internal.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "External",
+                                    "value": "external"
+                                },
+                                {
+                                    "label": "Internal",
+                                    "value": "internal"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "markLogicNodePublicIpAddressPrefix",
+                        "type": "Microsoft.Network.PublicIpAddressCombo",
+                        "label": {
+                            "publicIpAddress": "New public IP name",
+                            "domainNameLabel": "Domain name for MarkLogic"
+                        },
+                        "toolTip": {
+                            "publicIpAddress": "Only new public IP is currently supported. Name must be unique across a resource group",
+                            "domainNameLabel": "Splunk will be accessible from this domain"
+                        },
+                        "defaultValue": {
+                            "publicIpAddressName": "markIP",
+                            "domainNameLabel": "change_me_to_be_unique"
+                        },
+                        "constraints": {
+                            "required": {
+                                "domainNameLabel": true
+                            }
+                        },
+                        "options": {
+                            "hideNone": true,
+                            "hideDomainNameLabel": false
+                        }
+                    },
+                    {
+                        "name": "loadBalancerPublicIpAddressPrefix",
+                        "type": "Microsoft.Network.PublicIpAddressCombo",
+                        "label": {
+                            "publicIpAddress": "Name of IP address for Node load balancer",
+                            "domainNameLabel": "DNS label for Node load balancer"
+                        },
+                        "toolTip": {
+                            "domainNameLabel": "DNS label for the Node load balancer public IP address. This must be unique."
+                        },
+                        "defaultValue": {
+                            "publicIpAddressName": "lbpip",
+                            "domainNameLabel": "change_me_to_be_unique"
+                        },
+                        "options": {
+                            "hideNone": true,
+                            "hideExisting": true
+                        },
+                        "visible": "[equals(steps('networkSettings').loadBalancerType, 'external')]",
+                        "constraints": {
+                            "required": {
+                                "domainNameLabel": true
+                            }
+                        }
+                    },
+                    {
+                        "name": "internalLoadBalancerPrivateIP",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Internal LoadBalancer Private IP",
+                        "toolTip": "Internal LoadBalancer Private IP",
+                        "constraints": {
+                            "required": true
+                        },
+                        "visible": "[equals(steps('networkSettings').loadBalancerType, 'internal')]"
+                    }
+                ]
+            }
+        ],
+        "outputs": {
+            "location": "[location()]",
+            "clusterPrefix": "[basics('clusterName')]",
+            "clusterType": "[steps('nodesSettings').clusterType]",
+            "adminUsername": "[basics('adminUsername')]",
+            "adminPassword": "[basics('SSHCredentials').password]",
+            "sshPublicKey": "[basics('SSHCredentials').sshPublicKey]",
+            "authenticationType": "[basics('SSHCredentials').authenticationType]",
+            "clusterNodeCount": "[steps('nodesSettings').multiNodeVmCount]",
+            "singleNodeSize": "[steps('nodesSettings').singleNodeVmSize]",
+            "clusterNodeSize": "[steps('nodesSettings').multiNodeVmSize]",
+            "MarkLogicLicenseKey": "[steps('markLogicPortal').MarkLogicLicenseKey]",
+            "adminUsernameMarkLogicPortal": "[steps('markLogicPortal').adminUsernameMarkLogicPortal]",
+            "adminPasswordMarkLogicPortal": "[steps('markLogicPortal').adminPasswordMarkLogicPortal]",
+            "virtualNetworkNewOrExisting": "[steps('networkSettings').vnetSpec.newOrExisting]",
+            "virtualNetworkExistingRGName": "[steps('networkSettings').vnetSpec.resourceGroup]",
+            "virtualNetworkAddressPrefix": "[steps('networkSettings').vnetSpec.addressPrefix]",
+            "subnetName": "[steps('networkSettings').vnetSpec.subnets.subnet.name]",
+            "subnetPrefix": "[steps('networkSettings').vnetSpec.subnets.subnet1.addressPrefix]",
+            "nodepublicIPdnsPrefix": "[steps('networkSettings').markLogicNodePublicIpAddressPrefix.domainNameLabel]",
+            "loadBalancerpublicIPdnsPrefix": "[steps('networkSettings').loadBalancerPublicIpAddressPrefix.domainNameLabel]",
+            "loadBalancerType": "[steps('networkSettings').loadBalancerType]",
+            "internalLoadBalancerPrivateIP": "[steps('networkSettings').internalLoadBalancerPrivateIP]"
+        }
+    }
+}
