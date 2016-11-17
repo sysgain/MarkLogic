@@ -227,7 +227,7 @@
         "description": "Base URL for Marketplace",
         "artifactsBaseUrl": ""
       },
-      "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldev-nov20"
+      "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldev-nov21"
     }
   },
   "variables": {
@@ -402,6 +402,20 @@
           "[variables('templateUrls').createDataBaseScriptUrl]"
         ],
         "commandToExecute": "[concat('sh create-database.sh',' ', 'localhost', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ',parameters('markLogicDatabaseName'))]"
+      },
+      "createForestExtension": {
+        "location": "[parameters('location')]",
+        "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
+        "vmName": "[parameters('clusterPrefix')]",
+        "count": "[parameters('clusterNodeCount')]",
+        "vmExtensionName": "extension",
+        "customScriptsUrl": [
+          "[variables('templateUrls').createForestScriptUrl]"
+        ],
+        "forestNamePrefix": "mlforest",
+        "mlUserName": "[parameters('adminUsernameMarkLogicPortal')]",
+        "mlPassword": "[parameters('adminPasswordMarkLogicPortal')]",
+        "mldatabaseName": "[parameters('markLogicDatabaseName')]"
       }
     },
     "templateUrls": {
@@ -419,10 +433,12 @@
       "virtualMachineTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'virtual-machine-',parameters('authenticationType'),'.json')]",
       "virtualMachineExtensionMultiIndex0TemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-0.json')]",
       "virtualMachineExtensionMultiIndex1TemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-1.json')]",
+      "virtualMachineExtensionMultiIndex0ForestTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-0-forest.json')]",
       "dataDiskMountScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'data-disk-mount.sh')]",
       "firstNodeConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-first-node.sh')]",
       "additionalNodesConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-additional-nodes.sh')]",
-      "createDataBaseScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'create-database.sh')]"
+      "createDataBaseScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'create-database.sh')]",
+      "createForestScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'create-forest.sh')]"
     }
   },
   "resources": [
