@@ -1,7 +1,7 @@
 Feature: Provision a azuredeploy
 
 	Background:
-    	Given I have opened the "/mltestcases/azuredeploy.json" template
+    	Given I have opened the "/azuredeploy.json" template
 
     
     Scenario: Validate the Template Against the Azure Validator
