@@ -1,0 +1,28 @@
+{
+  "name": "arm-components",
+  "version": "1.0.0",
+  "description": "This repo has all the core building blocks pertaining to 3rd party and 1st part components",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sysgain/arm-components.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sysgain/arm-components/issues"
+  },
+  "homepage": "https://github.com/sysgain/arm-components#readme",
+  "devDependencies": {
+    "azure-arm-resource": "^1.4.4-preview",
+    "cucumber": "^1.2.1",
+    "ms-rest-azure": "^1.14.5",
+    "object-path": "^0.11.1"
+  }  
+}
