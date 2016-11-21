@@ -1,7 +1,7 @@
 Feature: Provision a azuredeploy
 
 	Background:
-    	Given I have opened the "/mltestcases/mainTemplate.json" template
+    	Given I have opened the "/home/tspadmin/marklogic-mldev-nov21/azuredeploy.json" template
 
     
     Scenario: Validate the Template Against the Azure Validator
