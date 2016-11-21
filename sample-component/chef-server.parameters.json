@@ -1,0 +1,27 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "West US"
+    },
+    "publicIPdnsPrefix": {
+      "value": "publicdnsprefix"
+    },
+    "adminUsername": {
+      "value": "sysgain"
+    },
+    "adminPassword": {
+      "value": "Sysga1n4205!"
+    },
+    "tag": {
+      "value": {
+        "key1": "key",
+        "value1": "value"
+      }
+    },
+    "baseUrl": {
+      "value": "https://raw.githubusercontent.com/sysgain/arm-base/staging"
+    }
+  }
+}

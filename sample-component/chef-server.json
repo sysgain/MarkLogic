@@ -1,0 +1,330 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "West US",
+      "allowedValues": [
+        "Brazil South",
+        "East Asia",
+        "East US",
+        "Japan East",
+        "Japan West",
+        "North Central US",
+        "North Europe",
+        "South Central US",
+        "West Europe",
+        "West US",
+        "Southeast Asia",
+        "Central US",
+        "East US 2"
+      ],
+      "metadata": {
+        "description": "Virtual Network and Subnets Deployment Location"
+      }
+    },
+    "publicIPdnsPrefix": {
+      "type": "string",
+      "defaultValue": "publicdnsprefix",
+      "metadata": {
+        "description": "Public IP DNS Prefix"
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "defaultValue": "sysgain",
+      "metadata": {
+        "description": "Admin Username of Virtual Machine to SSH or RDP"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "defaultValue": "Sysga1n4205!",
+      "metadata": {
+        "description": "Admin Password of Virtual Machine to SSH or RDP"
+      }
+    },
+    "tag": {
+      "type": "object",
+      "defaultValue": {
+        "key1": "key",
+        "value1": "value"
+      },
+      "metadata": {
+        "description": "Custom Tag Values"
+      }
+    },
+    "baseUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "The base URL for dependent deployment files"
+      },
+      "defaultValue": "https://raw.githubusercontent.com/sysgain/arm-base/staging"
+    }
+  },
+  "variables": {
+    "vnetName": "virtualNetwork",
+    "vnetAddressPrefix": "10.0.0.0/16",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('vnetName'))]",
+    "subnet1Name": "subnet1",
+    "subnet1Prefix": "10.0.1.0/24",
+    "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet1Name'))]",
+    "networkApiVersion": "2015-06-15",
+    "deploymentApiVersion": "2015-01-01",
+    "storageApiVersion": "2015-06-15",
+    "computeApiVersion": "2015-06-15",
+    "uniqueString": "[uniquestring(resourceGroup().id)]",
+    "storageAccountName": "unqstorage",
+    "storageAccountType": "Standard_LRS",
+    "publicIPAddressName": "publicIPAddress",
+    "networkSecurityGroupName": "[concat(variables('vnetName'),'-nsg')]",
+    "networkInterfaceName": "[concat(variables('vnetName'),'-nic')]",
+    "vmName": "vmName",
+    "vmSize": "Standard_D2",
+    "imagePublisher": "chef-software",
+    "imageOffer": "chef-server",
+    "imageSKU": "azure_marketplace_25",
+    "imageVersion": "latest",
+    "vmStorageAccountContainerName": "vhds",
+    "vmExtensionName": "vmExtensionName",
+    "customScriptUrl": "[concat(parameters('baseUrl'),'/scripts/script.sh?token=AQ77wpR7_mJMfG6VpFThJqrLP_hTgLeXks5XoXYrwA%3D%3D')]"
+  },
+  "resources": [
+    {
+      "comments": "Virtual Network and Subnet Deployment",
+      "name": "vnet",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('baseUrl'), '/nested/vnet-subnet.json?token=AQ77wu1mSjw2qutte3jPBXgoapXy6rgSks5XoCx4wA%3D%3D')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "networkApiVersion": {
+            "value": "[variables('networkApiVersion')]"
+          },
+          "vnetName": {
+            "value": "[variables('vnetName')]"
+          },
+          "tag": {
+            "value": "[parameters('tag')]"
+          },
+          "vnetAddressPrefix": {
+            "value": "[variables('vnetAddressPrefix')]"
+          },
+          "subnet1Name": {
+            "value": "[variables('subnet1Name')]"
+          },
+          "subnet1Prefix": {
+            "value": "[variables('subnet1Prefix')]"
+          }
+        }
+      }
+    },
+    {
+      "comments": "Storage Account Deployment",
+      "name": "storage",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('baseUrl'), '/nested/storage.json?token=AQ77wr1MS77-bxD2PgCMAYfYa6-g8Gzpks5XoSmawA%3D%3D')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "storageAccountName": {
+            "value": "[concat(variables('storageAccountName'),variables('uniqueString'))]"
+          },
+          "storageApiVersion": {
+            "value": "[variables('storageApiVersion')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "tag": {
+            "value": "[parameters('tag')]"
+          },
+          "storageAccountType": {
+            "value": "[variables('storageAccountType')]"
+          }
+        }
+      }
+    },
+    {
+      "comments": "Public IP Deployment",
+      "name": "publicIP",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "dependsOn": [
+        "['Microsoft.Resources/deployments/vnet']"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('baseUrl'), '/nested/public-ip.json?token=AQ77wq7ri0zJxZv1vurISf50Rtn9-dISks5XoSvHwA%3D%3D')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "networkApiVersion": {
+            "value": "[variables('networkApiVersion')]"
+          },
+          "publicIPAddressName": {
+            "value": "[variables('publicIPAddressName')]"
+          },
+          "tag": {
+            "value": "[parameters('tag')]"
+          },
+          "publicIPdnsPrefix": {
+            "value": "[concat(parameters('publicIPdnsPrefix'),variables('uniqueString'))]"
+          }
+        }
+      }
+    },
+    {
+      "comments": "Network Security Group Deployment",
+      "name": "networkSecurityGroup",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "dependsOn": [
+        "['Microsoft.Resources/deployments/vnet']"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('baseUrl'), '/nested/network-security-group.json?token=AQ77whZF2vJKCahowN9vIfOpRjIxfrW7ks5XoS7CwA%3D%3D')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "networkApiVersion": {
+            "value": "[variables('networkApiVersion')]"
+          },
+          "networkSecurityGroupName": {
+            "value": "[variables('networkSecurityGroupName')]"
+          },
+          "tag": {
+            "value": "[parameters('tag')]"
+          }
+        }
+      }
+    },
+    {
+      "comments": "Network Interface Deployment",
+      "name": "networkInterface",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "dependsOn": [
+        "['Microsoft.Resources/deployments/networkSecurityGroup']",
+        "['Microsoft.Resources/deployments/publicIP']"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('baseUrl'), '/nested/network-interface.json?token=AQ77wqZmuxyQX4VxDxt7SrTJ7JFgtv34ks5XoTe6wA%3D%3D')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "networkApiVersion": {
+            "value": "[variables('networkApiVersion')]"
+          },
+          "networkInterfaceName": {
+            "value": "[variables('networkInterfaceName')]"
+          },
+          "tag": {
+            "value": "[parameters('tag')]"
+          },
+          "networkSecurityGroupName": {
+            "value": "[variables('networkSecurityGroupName')]"
+          },
+          "publicIPAddressName": {
+            "value": "[variables('publicIPAddressName')]"
+          },
+          "subnetRef": {
+            "value": "[variables('subnet1Ref')]"
+          }
+        }
+      }
+    },
+    {
+      "comments": "Virtual Machine Deployment",
+      "name": "virtualMachine",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "dependsOn": [
+        "['Microsoft.Resources/deployments/networkInterface']"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('baseUrl'), '/nested/virtual-machine.json?token=AQ77wlIEy6MlTmfIvS_GhAWKOBCx4zvuks5XoXawwA%3D%3D')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "computeApiVersion": {
+            "value": "[variables('computeApiVersion')]"
+          },
+          "tag": {
+            "value": "[parameters('tag')]"
+          },
+          "vmName": {
+            "value": "[variables('vmName')]"
+          },
+          "vmSize": {
+            "value": "[variables('vmSize')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "imagePublisher": {
+            "value": "[variables('imagePublisher')]"
+          },
+          "imageOffer": {
+            "value": "[variables('imageOffer')]"
+          },
+          "imageSKU": {
+            "value": "[variables('imageSKU')]"
+          },
+          "imageVersion": {
+            "value": "[variables('imageVersion')]"
+          },
+          "storageAccountName": {
+            "value": "[concat(variables('storageAccountName'),variables('uniqueString'))]"
+          },
+          "vmStorageAccountContainerName": {
+            "value": "[variables('vmStorageAccountContainerName')]"
+          },
+          "networkInterfaceName": {
+            "value": "[variables('networkInterfaceName')]"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "Output1": {
+      "type": "string",
+      "value": "Deployment outputs"
+    }
+  }
+}
