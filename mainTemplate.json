@@ -1,528 +1,528 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "location": {
-      "type": "string",
-      "metadata": {
-        "description": "Deployment Location"
-      }
-    },
-    "clusterPrefix": {
-      "type": "string",
-      "defaultValue": "ml",
-      "metadata": {
-        "description": "MarkLogic Cluster Prefix"
-      }
-    },
-    "clusterNodeCount": {
-      "type": "int",
-      "defaultValue": 3,
-      "allowedValues": [
-        1,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10
-      ],
-      "metadata": {
-        "description": "Number of Nodes in the Multi Node Cluster (Multi Node). Minimum 3 Nodes and Maximum 10 Nodes"
-      }
-    },
-    "singleNodeSize": {
-      "type": "string",
-      "defaultValue": "Standard_DS11_v2",
-      "allowedValues": [
-        "Standard_DS11",
-        "Standard_DS12",
-        "Standard_DS13",
-        "Standard_DS14",
-        "Standard_DS11_v2",
-        "Standard_DS12_v2",
-        "Standard_DS13_v2",
-        "Standard_DS14_v2",
-        "Standard_DS15_v2",
-        "Standard_GS1",
-        "Standard_GS2",
-        "Standard_GS3",
-        "Standard_GS4",
-        "Standard_GS5"
-      ],
-      "metadata": {
-        "description": "Size of the Marklogic Single Node VM"
-      }
-    },
-    "clusterNodeSize": {
-      "type": "string",
-      "defaultValue": "Standard_DS3_v2",
-      "allowedValues": [
-      	"Standard_DS3_v2",
-        "Standard_DS13",
-        "Standard_DS14",
-        "Standard_DS13_v2",
-        "Standard_DS14_v2",
-        "Standard_DS15_v2",
-        "Standard_GS3",
-        "Standard_GS4",
-        "Standard_GS5"
-      ],
-      "metadata": {
-        "description": "Size of the MarkLogic Multi Node VMs"
-      }
-    },
-    "dataDiskStorageAccountType": {
-      "type": "string",
-      "defaultValue": "Standard_LRS",
-      "allowedValues": [
-        "Standard_LRS",
-        "Premium_LRS"
-      ],
-      "metadata": {
-        "description": "Type of the Data Disk that is going to be attached. Standard or Premium"
-      }
-    },
-    "markLogicLicenseKey": {
-      "type": "string",
-      "metadata": {
-        "description": "License Key for MarkLogic"
-      }
-    },
-    "virtualNetworkNewOrExisting": {
-      "type": "string",
-      "defaultValue": "new",
-      "allowedValues": [
-        "new",
-        "existing"
-      ],
-      "metadata": {
-        "description": "Identifies whether to use new or existing Virtual Network"
-      }
-    },
-    "virtualNetworkExistingRGName": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "Name of resource group of existing Virtual Network (if applicable)"
-      }
-    },
-    "virtualNetworkName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the virtual network that the consumer wants to use"
-      }
-    },
-    "virtualNetworkAddressPrefix": {
-      "type": "string",
-      "defaultValue": "10.0.0.0/16",
-      "metadata": {
-        "description": "Virtual network address CIDR"
-      }
-    },
-    "subnetName": {
-      "type": "string",
-      "defaultValue": "shsubnet",
-      "metadata": {
-        "description": "Subnet for the Search Head"
-      }
-    },
-    "subnetPrefix": {
-      "type": "string",
-      "defaultValue": "10.0.1.0/24",
-      "metadata": {
-        "description": "Subnet for the Search Head"
-      }
-    },
-    "loadBalancerType": {
-      "type": "string",
-      "defaultValue": "external",
-      "allowedValues": [
-        "external",
-        "internal"
-      ],
-      "metadata": {
-        "description": "Type of Load Balancer to be used. External or Internal"
-      }
-    },
-    "internalLoadBalancerPrivateIP": {
-      "type": "string",
-      "defaultValue": "10.0.1.10",
-      "metadata": {
-        "description": "Static Private Ip for Internal Loadbalancer"
-      }
-    },
-    "loadBalancerpublicIPdnsPrefix": {
-      "type": "string",
-      "defaultValue": "mlloadbalancer",
-      "metadata": {
-        "description": "Public DNS prefix for MarkLogic external load balancer"
-      }
-    },
-    "nodepublicIPdnsPrefix": {
-      "type": "string",
-      "defaultValue": "mlnode",
-      "metadata": {
-        "description": "Public DNS prefix for MarkLogic nodes"
-      }
-    },
-    "adminUsername": {
-      "type": "string",
-      "defaultValue": "sysgain",
-      "metadata": {
-        "description": "OS Admin User Name for MarkLogic Nodes"
-      }
-    },
-    "authenticationType": {
-      "type": "string",
-      "defaultValue": "password",
-      "allowedValues": [
-        "password",
-        "sshkey"
-      ],
-      "metadata": {
-        "description": "Authentication type"
-      }
-    },
-    "adminPasswordOrSshKey": {
-      "type": "securestring",
-      "defaultValue": "Sysga1n4205!",
-      "metadata": {
-        "description": "OS Admin password"
-      }
-    },
-    "sshPublicKey": {
-      "type": "string",
-      "defaultValue": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAnI/oIyLbvZ55ioKQrJln5KaHE+7L9xzYiyKwJYenJHrfZwRJywGkQe5cwkAYdKD/FhArTwCeQHTjAXxr+/jwel552kszumKkoY1xXIN51ybqopIthEO1u5dvK1GKAuyhBVeVTQsOU4i42yXB3wBmb8q7iyMIckZdA6m2HEP+UmVpfIV3GHvWQxfu105nKTSR7/a7TG8xiry36ti/fZ5KJxVfY6jFY18C57HVhIKOg2RF3fvcl3sMHEVU/dvJWsnkX7wk+ITAXtRFK15zc87qnk3fAhW3z66UWEsAfkppc4lQH/YhuyAx5JJKNdD+crM4Y74uQIgT1Y2gYWqathm0QQ== rsa-key-20161122",
-      "metadata": {
-        "description": "SSH public key"
-      }
-    },
-    "adminUsernameMarkLogicPortal": {
-      "type": "string",
-      "defaultValue": "sysgain",
-      "metadata": {
-        "description": "Admin User Name for MarkLogic Admin Portal"
-      }
-    },
-    "adminPasswordMarkLogicPortal": {
-      "type": "securestring",
-      "defaultValue": "Sysga1n4205!",
-      "metadata": {
-        "description": "Admin password for MarkLogic Admin Portal"
-      }
-    },
-    "markLogicDatabaseName": {
-    	"type": "string",
-      "defaultValue": "mldatabase",
-      "metadata": {
-        "description": "MarkLogic Database Name"
-      }
-    },
-    "baseUrl": {
-      "type": "string",
-      "metadata": {
-        "description": "Base URL for Marketplace",
-        "artifactsBaseUrl": ""
-      },
-      "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldev-nov21"
-    }
-  },
-  "variables": {
-    "uniqueString": "[substring(uniquestring(resourceGroup().id),0,8)]",
-    "publicIpTemplate": "[concat('lbPublicIp',parameters('loadBalancerType'))]",
-    "lbPublicIpexternal": "publicip.json",
-    "lbPublicIpinternal": "publicip-empty.json",
-    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
-    "subnetRef": "[concat(variables('vnetID'),'/subnets/',parameters ('subnetName'))]",
-    "nodeNicName": "mlnic-",
-    "loadBalancerName": "[concat('markLogiclb','-',parameters('loadBalancerType'))]",
-    "loadBalancerBackendPoolName": "mlBackendPool",
-    "nodeVmSize": "[concat('cluster-size-',parameters('clusterNodeCount'))]",
-    "cluster-size-1": {
-      "vmSize": "[parameters('singleNodeSize')]",
-      "nodes": "singlenode"
-    },
-    "cluster-size-3": {
-      "vmSize": "[parameters('clusterNodeSize')]",
-      "nodes": "cluster"
-    },
-    "cluster-size-4": {
-      "vmSize": "[parameters('clusterNodeSize')]",
-      "nodes": "cluster"
-    },
-    "cluster-size-5": {
-      "vmSize": "[parameters('clusterNodeSize')]",
-      "nodes": "cluster"
-    },
-    "cluster-size-6": {
-      "vmSize": "[parameters('clusterNodeSize')]",
-      "nodes": "cluster"
-    },
-    "cluster-size-7": {
-      "vmSize": "[parameters('clusterNodeSize')]",
-      "nodes": "cluster"
-    },
-    "cluster-size-8": {
-      "vmSize": "[parameters('clusterNodeSize')]",
-      "nodes": "cluster"
-    },
-    "cluster-size-9": {
-      "vmSize": "[parameters('clusterNodeSize')]",
-      "nodes": "cluster"
-    },
-    "cluster-size-10": {
-      "vmSize": "[parameters('clusterNodeSize')]",
-      "nodes": "cluster"
-    },
-    "apiVersions": {
-      "deploymentApiVersion": "2015-01-01",
-      "networkApiVersion": "2015-06-15",
-      "storageApiVersion": "2015-06-15",
-      "computeApiVersion": "2015-06-15"
-    },
-    "networkSettings": {
-      "location": "[parameters('location')]",
-      "networkApiVersion": "[variables('apiVersions').networkApiVersion]",
-      "virtualNetworkName": "[parameters('virtualNetworkName')]",
-      "virtualNetworkExistingRGName": "[parameters('virtualNetworkExistingRGName')]",
-      "virtualNetworkAddressPrefix": "[parameters('virtualNetworkAddressPrefix')]",
-      "count": "[parameters('clusterNodeCount')]",
-      "availabilitySetName": "mlAvailabilitySet",
-      "platformFaultDomainCount": "3",
-      "platformUpdateDomainCount": "20",
-      "subnets": {
-        "subnet1": {
-          "name": "[parameters('subnetName')]",
-          "prefix": "[parameters('subnetPrefix')]"
-        }
-      },
-      "nodeNetworkSettings": {
-        "location": "[parameters('location')]",
-        "count": "[parameters('clusterNodeCount')]",
-        "networkApiVersion": "[variables('apiVersions').networkApiVersion]",
-        "publicIPAddressName": "mlnodepublicip",
-        "publicIPdnsPrefix": "[concat(parameters('nodepublicIPdnsPrefix'),'-',variables('uniqueString'))]",
-        "nicName": "[variables('nodeNicName')]",
-        "networkSecurityGroupName": "mlnsg",
-        "subnetRef": "[variables('subnetRef')]",
-        "clusterPrefix": "[parameters('clusterPrefix')]",
-        "loadBalancerName": "[variables('loadBalancerName')]",
-        "loadBalancerBackendPoolName": "[variables('loadBalancerBackendPoolName')]"
-      },
-      "loadBalancerNetworkSettings": {
-        "location": "[parameters('location')]",
-        "networkApiVersion": "[variables('apiVersions').networkApiVersion]",
-        "publicIPAddressName": "mllbpublicip",
-        "publicIPdnsPrefix": "[concat(parameters('loadBalancerpublicIPdnsPrefix'),'-',variables('uniqueString'))]",
-        "loadBalancerName": "[variables('loadBalancerName')]",
-        "lbIpConfigName": "mlLbfrontendIp",
-        "loadBalancerBackendPoolName": "[variables('loadBalancerBackendPoolName')]",
-        "clusterPrefix": "[parameters('clusterPrefix')]",
-        "count": "[parameters('clusterNodeCount')]",
-        "subnetRef": "[variables('subnetRef')]",
-        "privateIPAddress": "[parameters('internalLoadBalancerPrivateIP')]"
-      }
-    },
-    "storageSettings": {
-      "osDiskStorage": {
-        "location": "[parameters('location')]",
-        "storageAccountType": "Standard_LRS",
-        "storageApiVersion": "[variables('apiVersions').storageApiVersion]",
-        "storageAccountName": "[concat('osdisk',variables('uniqueString'))]"
-      },
-      "dataDiskStorage": {
-        "location": "[parameters('location')]",
-        "storageAccountType": "[parameters('dataDiskStorageAccountType')]",
-        "storageApiVersion": "[variables('apiVersions').storageApiVersion]",
-        "storageAccountName": "[concat('datadisk',variables('uniqueString'))]"
-      }
-    },
-    "virtualMachineSettings": {
-      "location": "[parameters('location')]",
-      "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
-      "vmName": "[parameters('clusterPrefix')]",
-      "vmSize": "[variables(variables('nodeVmSize')).vmSize]",
-      "authenticationType": "password",
-      "adminUsername": "[parameters('adminUsername')]",
-      "adminPasswordOrSshKey": "[parameters('adminPasswordOrSshKey')]",
-      "imagePublisher": "marklogic",
-      "imageOffer": "marklogic_80-preview",
-      "imageSKU": "ml_centos",
-      "imageVersion": "latest",
-      "osDiskStorageAccountName": "[variables('storageSettings').osDiskStorage.storageAccountName]",
-      "dataDiskStorageAccountName": "[variables('storageSettings').dataDiskStorage.storageAccountName]",
-      "vmStorageAccountContainerName": "vhds",
-      "networkInterfaceName": "[variables('nodeNicName')]",
-      "dataDiskSizeGB": "1023",
-      "count": "[parameters('clusterNodeCount')]",
-      "availabilitySetName": "[variables('networkSettings').availabilitySetName]",
-      "dataDiskExtension": {
-        "location": "[parameters('location')]",
-        "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
-        "vmName": "[parameters('clusterPrefix')]",
-        "count": "[parameters('clusterNodeCount')]",
-        "vmExtensionName": "extension",
-        "customScriptsUrl": [
-          "[variables('templateUrls').dataDiskMountScriptUrl]"
-        ],
-        "commandToExecute": "sh data-disk-mount.sh"
-      },
-      "firstNodeConfigExtension": {
-        "location": "[parameters('location')]",
-        "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
-        "vmName": "[parameters('clusterPrefix')]",
-        "count": 1,
-        "vmExtensionName": "extension",
-        "customScriptsUrl": [
-          "[variables('templateUrls').firstNodeConfigScriptUrl]"
-        ],
-        "commandToExecute": "[concat('sh setup-first-node.sh localhost', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ','anyauth public 5 10')]"
-      },
-      "additionalNodesConfigExtension": {
-        "location": "[parameters('location')]",
-        "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
-        "vmName": "[parameters('clusterPrefix')]",
-        "count": "[sub(parameters('clusterNodeCount'),1)]",
-        "vmExtensionName": "extension",
-        "customScriptsUrl": [
-          "[variables('templateUrls').additionalNodesConfigScriptUrl]"
-        ],
-        "commandToExecute": "[concat('sh setup-additional-nodes.sh',' ', parameters('clusterPrefix'), '0', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ','anyauth 5 10 localhost')]"
-      },
-      "createDataBaseExtension": {
-        "location": "[parameters('location')]",
-        "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
-        "vmName": "[parameters('clusterPrefix')]",
-        "count": 1,
-        "vmExtensionName": "extension",
-        "customScriptsUrl": [
-          "[variables('templateUrls').createDataBaseScriptUrl]"
-        ],
-        "commandToExecute": "[concat('sh create-database.sh',' ', 'localhost', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ',parameters('markLogicDatabaseName'))]"
-      },
-      "createForestExtension": {
-        "location": "[parameters('location')]",
-        "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
-        "vmName": "[parameters('clusterPrefix')]",
-        "count": "[parameters('clusterNodeCount')]",
-        "vmExtensionName": "extension",
-        "customScriptsUrl": [
-          "[variables('templateUrls').createForestScriptUrl]"
-        ],
-        "forestNamePrefix": "mlforest",
-        "mlUserName": "[parameters('adminUsernameMarkLogicPortal')]",
-        "mlPassword": "[parameters('adminPasswordMarkLogicPortal')]",
-        "mldatabaseName": "[parameters('markLogicDatabaseName')]"
-      }
-    },
-    "templateUrls": {
-      "sharedResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'shared-resources.json')]",
-      "virtualNetworkTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'vnet-', parameters('virtualNetworkNewOrExisting'), '.json')]",
-      "loadBalancerTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'loadbalancer-',parameters('loadBalancerType'),'.json')]",
-      "storageAccountTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'storage-account.json')]",
-      "publicIpMultiTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'publicip-multi.json')]",
-      "networkResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-resources.json')]",
-      "externalLoadBlancerpublicIpTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', variables(variables('publicIpTemplate')))]",
-      "nodeNetworkInterfacesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-interface-multi.json')]",
-      "nodeNetworkSecurityTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-security-group.json')]",
-      "availabilitySetTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'availability-set.json')]",
-      "virtualMachineDeploymentTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'virtual-machine-deployment-',variables(variables('nodeVmSize')).nodes,'.json')]",
-      "virtualMachineTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'virtual-machine-',parameters('authenticationType'),'.json')]",
-      "virtualMachineExtensionMultiIndex0TemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-0.json')]",
-      "virtualMachineExtensionMultiIndex1TemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-1.json')]",
-      "virtualMachineExtensionMultiIndex0ForestTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-0-forest.json')]",
-      "dataDiskMountScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'data-disk-mount.sh')]",
-      "firstNodeConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-first-node.sh')]",
-      "additionalNodesConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-additional-nodes.sh')]",
-      "createDataBaseScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'create-database.sh')]",
-      "createForestScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'create-forest.sh')]"
-    }
-  },
-  "resources": [
-    {
-      "name": "shared-resources",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('apiVersions').deploymentAPIVersion]",
-      "comments": "Virtual network deployment",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('templateUrls').sharedResourcesTemplateUrl]",
-          "contentVersion": "1.0.0.0"
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Deployment Location"
+            }
         },
-        "parameters": {
-          "apiVersions": {
-            "value": "[variables('apiVersions')]"
-          },
-          "templateUrls": {
-            "value": "[variables('templateUrls')]"
-          },
-          "networkSettings": {
-            "value": "[variables('networkSettings')]"
-          },
-          "storageAccountSettings": {
-            "value": "[variables('storageSettings')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "network-resources",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('apiVersions').deploymentAPIVersion]",
-      "comments": "Network resources deployment",
-      "dependsOn": [
-        "shared-resources"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('templateUrls').networkResourcesTemplateUrl]",
-          "contentVersion": "1.0.0.0"
+        "clusterPrefix": {
+            "type": "string",
+            "defaultValue": "ml",
+            "metadata": {
+                "description": "MarkLogic Cluster Prefix"
+            }
         },
-        "parameters": {
-          "apiVersions": {
-            "value": "[variables('apiVersions')]"
-          },
-          "templateUrls": {
-            "value": "[variables('templateUrls')]"
-          },
-          "networkSettings": {
-            "value": "[variables('networkSettings')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "virtual-machines",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('apiVersions').deploymentAPIVersion]",
-      "comments": "Virtaul machines and Extensions deployment",
-      "dependsOn": [
-        "network-resources"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('templateUrls').virtualMachineDeploymentTemplateUrl]",
-          "contentVersion": "1.0.0.0"
+        "clusterNodeCount": {
+            "type": "int",
+            "defaultValue": 3,
+            "allowedValues": [
+                1,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+            ],
+            "metadata": {
+                "description": "Number of Nodes in the Multi Node Cluster (Multi Node). Minimum 3 Nodes and Maximum 10 Nodes"
+            }
         },
-        "parameters": {
-          "apiVersions": {
-            "value": "[variables('apiVersions')]"
-          },
-          "templateUrls": {
-            "value": "[variables('templateUrls')]"
-          },
-          "virtualMachineSettings": {
-            "value": "[variables('virtualMachineSettings')]"
-          }
+        "singleNodeSize": {
+            "type": "string",
+            "defaultValue": "Standard_DS11_v2",
+            "allowedValues": [
+                "Standard_DS11",
+                "Standard_DS12",
+                "Standard_DS13",
+                "Standard_DS14",
+                "Standard_DS11_v2",
+                "Standard_DS12_v2",
+                "Standard_DS13_v2",
+                "Standard_DS14_v2",
+                "Standard_DS15_v2",
+                "Standard_GS1",
+                "Standard_GS2",
+                "Standard_GS3",
+                "Standard_GS4",
+                "Standard_GS5"
+            ],
+            "metadata": {
+                "description": "Size of the Marklogic Single Node VM"
+            }
+        },
+        "clusterNodeSize": {
+            "type": "string",
+            "defaultValue": "Standard_DS3_v2",
+            "allowedValues": [
+                "Standard_DS3_v2",
+                "Standard_DS13",
+                "Standard_DS14",
+                "Standard_DS13_v2",
+                "Standard_DS14_v2",
+                "Standard_DS15_v2",
+                "Standard_GS3",
+                "Standard_GS4",
+                "Standard_GS5"
+            ],
+            "metadata": {
+                "description": "Size of the MarkLogic Multi Node VMs"
+            }
+        },
+        "dataDiskStorageAccountType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Premium_LRS"
+            ],
+            "metadata": {
+                "description": "Type of the Data Disk that is going to be attached. Standard or Premium"
+            }
+        },
+        "markLogicLicenseKey": {
+            "type": "string",
+            "metadata": {
+                "description": "License Key for MarkLogic"
+            }
+        },
+        "virtualNetworkNewOrExisting": {
+            "type": "string",
+            "defaultValue": "new",
+            "allowedValues": [
+                "new",
+                "existing"
+            ],
+            "metadata": {
+                "description": "Identifies whether to use new or existing Virtual Network"
+            }
+        },
+        "virtualNetworkExistingRGName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Name of resource group of existing Virtual Network (if applicable)"
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the virtual network that the consumer wants to use"
+            }
+        },
+        "virtualNetworkAddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+                "description": "Virtual network address CIDR"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "defaultValue": "shsubnet",
+            "metadata": {
+                "description": "Subnet for the Search Head"
+            }
+        },
+        "subnetPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.1.0/24",
+            "metadata": {
+                "description": "Subnet for the Search Head"
+            }
+        },
+        "loadBalancerType": {
+            "type": "string",
+            "defaultValue": "external",
+            "allowedValues": [
+                "external",
+                "internal"
+            ],
+            "metadata": {
+                "description": "Type of Load Balancer to be used. External or Internal"
+            }
+        },
+        "internalLoadBalancerPrivateIP": {
+            "type": "string",
+            "defaultValue": "10.0.1.10",
+            "metadata": {
+                "description": "Static Private Ip for Internal Loadbalancer"
+            }
+        },
+        "loadBalancerpublicIPdnsPrefix": {
+            "type": "string",
+            "defaultValue": "mlloadbalancer",
+            "metadata": {
+                "description": "Public DNS prefix for MarkLogic external load balancer"
+            }
+        },
+        "nodepublicIPdnsPrefix": {
+            "type": "string",
+            "defaultValue": "mlnode",
+            "metadata": {
+                "description": "Public DNS prefix for MarkLogic nodes"
+            }
+        },
+        "adminUsername": {
+            "type": "string",
+            "defaultValue": "sysgain",
+            "metadata": {
+                "description": "OS Admin User Name for MarkLogic Nodes"
+            }
+        },
+        "authenticationType": {
+            "type": "string",
+            "defaultValue": "password",
+            "allowedValues": [
+                "password",
+                "sshkey"
+            ],
+            "metadata": {
+                "description": "Authentication type"
+            }
+        },
+        "adminPasswordOrSshKey": {
+            "type": "securestring",
+            "defaultValue": "Sysga1n4205!",
+            "metadata": {
+                "description": "OS Admin password"
+            }
+        },
+        "sshPublicKey": {
+            "type": "string",
+            "defaultValue": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAnI/oIyLbvZ55ioKQrJln5KaHE+7L9xzYiyKwJYenJHrfZwRJywGkQe5cwkAYdKD/FhArTwCeQHTjAXxr+/jwel552kszumKkoY1xXIN51ybqopIthEO1u5dvK1GKAuyhBVeVTQsOU4i42yXB3wBmb8q7iyMIckZdA6m2HEP+UmVpfIV3GHvWQxfu105nKTSR7/a7TG8xiry36ti/fZ5KJxVfY6jFY18C57HVhIKOg2RF3fvcl3sMHEVU/dvJWsnkX7wk+ITAXtRFK15zc87qnk3fAhW3z66UWEsAfkppc4lQH/YhuyAx5JJKNdD+crM4Y74uQIgT1Y2gYWqathm0QQ== rsa-key-20161122",
+            "metadata": {
+                "description": "SSH public key"
+            }
+        },
+        "adminUsernameMarkLogicPortal": {
+            "type": "string",
+            "defaultValue": "sysgain",
+            "metadata": {
+                "description": "Admin User Name for MarkLogic Admin Portal"
+            }
+        },
+        "adminPasswordMarkLogicPortal": {
+            "type": "securestring",
+            "defaultValue": "Sysga1n4205!",
+            "metadata": {
+                "description": "Admin password for MarkLogic Admin Portal"
+            }
+        },
+        "markLogicDatabaseName": {
+            "type": "string",
+            "defaultValue": "mldatabase",
+            "metadata": {
+                "description": "MarkLogic Database Name"
+            }
+        },
+        "baseUrl": {
+            "type": "string",
+            "metadata": {
+                "description": "Base URL for Marketplace",
+                "artifactsBaseUrl": ""
+            },
+            "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldev-nov21"
         }
-      }
-    }
-  ],
-  "outputs": {}
+    },
+    "variables": {
+        "uniqueString": "[substring(uniquestring(resourceGroup().id),0,8)]",
+        "publicIpTemplate": "[concat('lbPublicIp',parameters('loadBalancerType'))]",
+        "lbPublicIpexternal": "publicip.json",
+        "lbPublicIpinternal": "publicip-empty.json",
+        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
+        "subnetRef": "[concat(variables('vnetID'),'/subnets/',parameters ('subnetName'))]",
+        "nodeNicName": "mlnic-",
+        "loadBalancerName": "[concat('markLogiclb','-',parameters('loadBalancerType'))]",
+        "loadBalancerBackendPoolName": "mlBackendPool",
+        "nodeVmSize": "[concat('cluster-size-',parameters('clusterNodeCount'))]",
+        "cluster-size-1": {
+            "vmSize": "[parameters('singleNodeSize')]",
+            "nodes": "singlenode"
+        },
+        "cluster-size-3": {
+            "vmSize": "[parameters('clusterNodeSize')]",
+            "nodes": "cluster"
+        },
+        "cluster-size-4": {
+            "vmSize": "[parameters('clusterNodeSize')]",
+            "nodes": "cluster"
+        },
+        "cluster-size-5": {
+            "vmSize": "[parameters('clusterNodeSize')]",
+            "nodes": "cluster"
+        },
+        "cluster-size-6": {
+            "vmSize": "[parameters('clusterNodeSize')]",
+            "nodes": "cluster"
+        },
+        "cluster-size-7": {
+            "vmSize": "[parameters('clusterNodeSize')]",
+            "nodes": "cluster"
+        },
+        "cluster-size-8": {
+            "vmSize": "[parameters('clusterNodeSize')]",
+            "nodes": "cluster"
+        },
+        "cluster-size-9": {
+            "vmSize": "[parameters('clusterNodeSize')]",
+            "nodes": "cluster"
+        },
+        "cluster-size-10": {
+            "vmSize": "[parameters('clusterNodeSize')]",
+            "nodes": "cluster"
+        },
+        "apiVersions": {
+            "deploymentApiVersion": "2015-01-01",
+            "networkApiVersion": "2015-06-15",
+            "storageApiVersion": "2015-06-15",
+            "computeApiVersion": "2015-06-15"
+        },
+        "networkSettings": {
+            "location": "[parameters('location')]",
+            "networkApiVersion": "[variables('apiVersions').networkApiVersion]",
+            "virtualNetworkName": "[parameters('virtualNetworkName')]",
+            "virtualNetworkExistingRGName": "[parameters('virtualNetworkExistingRGName')]",
+            "virtualNetworkAddressPrefix": "[parameters('virtualNetworkAddressPrefix')]",
+            "count": "[parameters('clusterNodeCount')]",
+            "availabilitySetName": "mlAvailabilitySet",
+            "platformFaultDomainCount": "3",
+            "platformUpdateDomainCount": "20",
+            "subnets": {
+                "subnet1": {
+                    "name": "[parameters('subnetName')]",
+                    "prefix": "[parameters('subnetPrefix')]"
+                }
+            },
+            "nodeNetworkSettings": {
+                "location": "[parameters('location')]",
+                "count": "[parameters('clusterNodeCount')]",
+                "networkApiVersion": "[variables('apiVersions').networkApiVersion]",
+                "publicIPAddressName": "mlnodepublicip",
+                "publicIPdnsPrefix": "[concat(parameters('nodepublicIPdnsPrefix'),'-',variables('uniqueString'))]",
+                "nicName": "[variables('nodeNicName')]",
+                "networkSecurityGroupName": "mlnsg",
+                "subnetRef": "[variables('subnetRef')]",
+                "clusterPrefix": "[parameters('clusterPrefix')]",
+                "loadBalancerName": "[variables('loadBalancerName')]",
+                "loadBalancerBackendPoolName": "[variables('loadBalancerBackendPoolName')]"
+            },
+            "loadBalancerNetworkSettings": {
+                "location": "[parameters('location')]",
+                "networkApiVersion": "[variables('apiVersions').networkApiVersion]",
+                "publicIPAddressName": "mllbpublicip",
+                "publicIPdnsPrefix": "[concat(parameters('loadBalancerpublicIPdnsPrefix'),'-',variables('uniqueString'))]",
+                "loadBalancerName": "[variables('loadBalancerName')]",
+                "lbIpConfigName": "mlLbfrontendIp",
+                "loadBalancerBackendPoolName": "[variables('loadBalancerBackendPoolName')]",
+                "clusterPrefix": "[parameters('clusterPrefix')]",
+                "count": "[parameters('clusterNodeCount')]",
+                "subnetRef": "[variables('subnetRef')]",
+                "privateIPAddress": "[parameters('internalLoadBalancerPrivateIP')]"
+            }
+        },
+        "storageSettings": {
+            "osDiskStorage": {
+                "location": "[parameters('location')]",
+                "storageAccountType": "Standard_LRS",
+                "storageApiVersion": "[variables('apiVersions').storageApiVersion]",
+                "storageAccountName": "[concat('osdisk',variables('uniqueString'))]"
+            },
+            "dataDiskStorage": {
+                "location": "[parameters('location')]",
+                "storageAccountType": "[parameters('dataDiskStorageAccountType')]",
+                "storageApiVersion": "[variables('apiVersions').storageApiVersion]",
+                "storageAccountName": "[concat('datadisk',variables('uniqueString'))]"
+            }
+        },
+        "virtualMachineSettings": {
+            "location": "[parameters('location')]",
+            "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
+            "vmName": "[parameters('clusterPrefix')]",
+            "vmSize": "[variables(variables('nodeVmSize')).vmSize]",
+            "authenticationType": "password",
+            "adminUsername": "[parameters('adminUsername')]",
+            "adminPasswordOrSshKey": "[parameters('adminPasswordOrSshKey')]",
+            "imagePublisher": "marklogic",
+            "imageOffer": "marklogic_80-preview",
+            "imageSKU": "ml_centos",
+            "imageVersion": "latest",
+            "osDiskStorageAccountName": "[variables('storageSettings').osDiskStorage.storageAccountName]",
+            "dataDiskStorageAccountName": "[variables('storageSettings').dataDiskStorage.storageAccountName]",
+            "vmStorageAccountContainerName": "vhds",
+            "networkInterfaceName": "[variables('nodeNicName')]",
+            "dataDiskSizeGB": "1023",
+            "count": "[parameters('clusterNodeCount')]",
+            "availabilitySetName": "[variables('networkSettings').availabilitySetName]",
+            "dataDiskExtension": {
+                "location": "[parameters('location')]",
+                "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
+                "vmName": "[parameters('clusterPrefix')]",
+                "count": "[parameters('clusterNodeCount')]",
+                "vmExtensionName": "extension",
+                "customScriptsUrl": [
+                    "[variables('templateUrls').dataDiskMountScriptUrl]"
+                ],
+                "commandToExecute": "sh data-disk-mount.sh"
+            },
+            "firstNodeConfigExtension": {
+                "location": "[parameters('location')]",
+                "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
+                "vmName": "[parameters('clusterPrefix')]",
+                "count": 1,
+                "vmExtensionName": "extension",
+                "customScriptsUrl": [
+                    "[variables('templateUrls').firstNodeConfigScriptUrl]"
+                ],
+                "commandToExecute": "[concat('sh setup-first-node.sh localhost', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ','anyauth public 5 10')]"
+            },
+            "additionalNodesConfigExtension": {
+                "location": "[parameters('location')]",
+                "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
+                "vmName": "[parameters('clusterPrefix')]",
+                "count": "[sub(parameters('clusterNodeCount'),1)]",
+                "vmExtensionName": "extension",
+                "customScriptsUrl": [
+                    "[variables('templateUrls').additionalNodesConfigScriptUrl]"
+                ],
+                "commandToExecute": "[concat('sh setup-additional-nodes.sh',' ', parameters('clusterPrefix'), '0', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ','anyauth 5 10 localhost')]"
+            },
+            "createDataBaseExtension": {
+                "location": "[parameters('location')]",
+                "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
+                "vmName": "[parameters('clusterPrefix')]",
+                "count": 1,
+                "vmExtensionName": "extension",
+                "customScriptsUrl": [
+                    "[variables('templateUrls').createDataBaseScriptUrl]"
+                ],
+                "commandToExecute": "[concat('sh create-database.sh',' ', 'localhost', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ',parameters('markLogicDatabaseName'))]"
+            },
+            "createForestExtension": {
+                "location": "[parameters('location')]",
+                "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
+                "vmName": "[parameters('clusterPrefix')]",
+                "count": "[parameters('clusterNodeCount')]",
+                "vmExtensionName": "extension",
+                "customScriptsUrl": [
+                    "[variables('templateUrls').createForestScriptUrl]"
+                ],
+                "forestNamePrefix": "mlforest",
+                "mlUserName": "[parameters('adminUsernameMarkLogicPortal')]",
+                "mlPassword": "[parameters('adminPasswordMarkLogicPortal')]",
+                "mldatabaseName": "[parameters('markLogicDatabaseName')]"
+            }
+        },
+        "templateUrls": {
+            "sharedResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'shared-resources.json')]",
+            "virtualNetworkTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'vnet-', parameters('virtualNetworkNewOrExisting'), '.json')]",
+            "loadBalancerTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'loadbalancer-',parameters('loadBalancerType'),'.json')]",
+            "storageAccountTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'storage-account.json')]",
+            "publicIpMultiTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'publicip-multi.json')]",
+            "networkResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-resources.json')]",
+            "externalLoadBlancerpublicIpTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', variables(variables('publicIpTemplate')))]",
+            "nodeNetworkInterfacesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-interface-multi.json')]",
+            "nodeNetworkSecurityTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-security-group.json')]",
+            "availabilitySetTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'availability-set.json')]",
+            "virtualMachineDeploymentTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'virtual-machine-deployment-',variables(variables('nodeVmSize')).nodes,'.json')]",
+            "virtualMachineTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'virtual-machine-',parameters('authenticationType'),'.json')]",
+            "virtualMachineExtensionMultiIndex0TemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-0.json')]",
+            "virtualMachineExtensionMultiIndex1TemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-1.json')]",
+            "virtualMachineExtensionMultiIndex0ForestTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-0-forest.json')]",
+            "dataDiskMountScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'data-disk-mount.sh')]",
+            "firstNodeConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-first-node.sh')]",
+            "additionalNodesConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-additional-nodes.sh')]",
+            "createDataBaseScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'create-database.sh')]",
+            "createForestScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'create-forest.sh')]"
+        }
+    },
+    "resources": [
+        {
+            "name": "shared-resources",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deploymentAPIVersion]",
+            "comments": "Virtual network deployment",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('templateUrls').sharedResourcesTemplateUrl]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "apiVersions": {
+                        "value": "[variables('apiVersions')]"
+                    },
+                    "templateUrls": {
+                        "value": "[variables('templateUrls')]"
+                    },
+                    "networkSettings": {
+                        "value": "[variables('networkSettings')]"
+                    },
+                    "storageAccountSettings": {
+                        "value": "[variables('storageSettings')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "network-resources",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deploymentAPIVersion]",
+            "comments": "Network resources deployment",
+            "dependsOn": [
+                "shared-resources"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('templateUrls').networkResourcesTemplateUrl]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "apiVersions": {
+                        "value": "[variables('apiVersions')]"
+                    },
+                    "templateUrls": {
+                        "value": "[variables('templateUrls')]"
+                    },
+                    "networkSettings": {
+                        "value": "[variables('networkSettings')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "virtual-machines",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deploymentAPIVersion]",
+            "comments": "Virtaul machines and Extensions deployment",
+            "dependsOn": [
+                "network-resources"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('templateUrls').virtualMachineDeploymentTemplateUrl]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "apiVersions": {
+                        "value": "[variables('apiVersions')]"
+                    },
+                    "templateUrls": {
+                        "value": "[variables('templateUrls')]"
+                    },
+                    "virtualMachineSettings": {
+                        "value": "[variables('virtualMachineSettings')]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {}
 }

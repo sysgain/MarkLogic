@@ -54,7 +54,7 @@
               "backendAddressPool": {
                 "id": "[concat(variables('loadBalancerbId'), '/backendAddressPools/', variables('loadBalancerBackendPoolName'))]"
               },
-              "protocol": "tcp",
+              "protocol": "Tcp",
               "frontendPort": 8000,
               "backendPort": 8000,
               "enableFloatingIP": false,
@@ -69,7 +69,7 @@
           {
             "name": "mlProbe",
             "properties": {
-              "protocol": "tcp",
+              "protocol": "Tcp",
               "port": 7997,
               "intervalInSeconds": 5,
               "numberOfProbes": 2
@@ -94,7 +94,7 @@
         "frontendIPConfiguration": {
           "id": "[variables('lbIpConfigId')]"
         },
-        "protocol": "tcp",
+        "protocol": "Tcp",
         "frontendPort": "[copyIndex(2200)]",
         "backendPort": 8001,
         "enableFloatingIP": false

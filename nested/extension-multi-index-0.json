@@ -1,46 +1,46 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "virtualMachineSettings": {
-      "type": "object",
-      "metadata": {
-        "description": "Virtual Machine settings object"
-      }
-    }
-  },
-  "variables": {
-    "location": "[parameters('virtualMachineSettings').location]",
-    "computeApiVersion": "[parameters('virtualMachineSettings').computeApiVersion]",
-    "vmName": "[parameters('virtualMachineSettings').vmName]",
-    "vmExtensionName": "[parameters('virtualMachineSettings').vmExtensionName]",
-    "count": "[parameters('virtualMachineSettings').count]",
-    "customScriptsUrl": "[parameters('virtualMachineSettings').customScriptsUrl]",
-    "commandToExecute": "[parameters('virtualMachineSettings').commandToExecute]"
-  },
-  "resources": [
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmName'),copyIndex(0),'/',variables('vmExtensionName'))]",
-      "apiVersion": "[variables('computeApiVersion')]",
-      "location": "[variables('location')]",
-      "comments": "Virtual machine extension",
-      "copy": {
-        "name": "extLoop",
-        "count": "[variables('count')]"
-      },
-      "properties": {
-        "publisher": "Microsoft.Azure.Extensions",
-        "type": "CustomScript",
-        "typeHandlerVersion": "2.0",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": "[variables('customScriptsUrl')]"
-        },
-        "protectedSettings": {
-          "commandToExecute": "[variables('commandToExecute')]"
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachineSettings": {
+            "type": "object",
+            "metadata": {
+                "description": "Virtual Machine settings object"
+            }
         }
-      }
-    }
-  ]
+    },
+    "variables": {
+        "location": "[parameters('virtualMachineSettings').location]",
+        "computeApiVersion": "[parameters('virtualMachineSettings').computeApiVersion]",
+        "vmName": "[parameters('virtualMachineSettings').vmName]",
+        "vmExtensionName": "[parameters('virtualMachineSettings').vmExtensionName]",
+        "count": "[parameters('virtualMachineSettings').count]",
+        "customScriptsUrl": "[parameters('virtualMachineSettings').customScriptsUrl]",
+        "commandToExecute": "[parameters('virtualMachineSettings').commandToExecute]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(variables('vmName'),copyIndex(0),'/',variables('vmExtensionName'))]",
+            "apiVersion": "[variables('computeApiVersion')]",
+            "location": "[variables('location')]",
+            "comments": "Virtual machine extension",
+            "copy": {
+                "name": "extLoop",
+                "count": "[variables('count')]"
+            },
+            "properties": {
+                "publisher": "Microsoft.Azure.Extensions",
+                "type": "CustomScript",
+                "typeHandlerVersion": "2.0",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": "[variables('customScriptsUrl')]"
+                },
+                "protectedSettings": {
+                    "commandToExecute": "[variables('commandToExecute')]"
+                }
+            }
+        }
+    ]
 }

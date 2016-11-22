@@ -21,7 +21,7 @@
     "lbIpConfigId": "[concat(variables('loadBalancerbId'),'/frontendIPConfigurations/', variables('lbIpConfigName'))]",
     "clusterPrefix": "[parameters('networkSettings').clusterPrefix]",
     "subnetRef": "[parameters('networkSettings').subnetRef]",
-    "privateIPAddress": "[parameters('networkSettings').privateIPAddress]",
+    "privateIPAddress": "[parameters('networkSettings').privateIPAddress]"
   },
   "resources": [
     {
@@ -58,7 +58,7 @@
               "backendAddressPool": {
                 "id": "[concat(variables('loadBalancerbId'), '/backendAddressPools/', variables('loadBalancerBackendPoolName'))]"
               },
-              "protocol": "tcp",
+              "protocol": "Tcp",
               "frontendPort": 8000,
               "backendPort": 8000,
               "enableFloatingIP": false,
@@ -73,7 +73,7 @@
           {
             "name": "mlProbe",
             "properties": {
-              "protocol": "tcp",
+              "protocol": "Tcp",
               "port": 7997,
               "intervalInSeconds": 5,
               "numberOfProbes": 2
