@@ -33,7 +33,7 @@
     "dataDiskStorageAccountSettings": "[parameters('storageAccountSettings').dataDiskStorage]",
     "storageAccountTemplateUrl": "[parameters('templateUrls').storageAccountTemplateUrl]",
     "virtualNetworkTemplateUrl": "[parameters('templateUrls').virtualNetworkTemplateUrl]",
-    "availabilitySetTemplateUrl": "[parameters('templateUrls').availabilitySetTemplateUrl]",
+    "availabilitySetTemplateUrl": "[parameters('templateUrls').availabilitySetTemplateUrl]"
 
   },
   "resources": [

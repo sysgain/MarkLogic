@@ -5,7 +5,7 @@
     "location": {
       "type": "string",
       "metadata": {
-        "description": "Location"
+        "description": "Deployment Location"
       }
     },
     "clusterPrefix": {
