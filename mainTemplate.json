@@ -85,7 +85,7 @@
         "description": "Type of the Data Disk that is going to be attached. Standard or Premium"
       }
     },
-    "MarkLogicLicenseKey": {
+    "markLogicLicenseKey": {
       "type": "string",
       "metadata": {
         "description": "License Key for MarkLogic"
