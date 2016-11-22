@@ -24,7 +24,9 @@
   "variables": {
     "deploymentApiVersion": "[parameters('apiVersions').deploymentApiVersion]",
     "virtualMachineSettings": "[parameters('virtualMachineSettings')]",
-    "virtualMachineTemplateUrl": "[parameters('templateUrls').virtualMachineTemplateUrl]"
+    "virtualMachineTemplateUrl": "[parameters('templateUrls').virtualMachineTemplateUrl]",
+    "virtualMachineExtensionMultiIndex0TemplateUrl": "[parameters('templateUrls').virtualMachineExtensionMultiIndex0TemplateUrl]",
+    "virtualMachineExtensionMultiIndex0ForestTemplateUrl": "[parameters('templateUrls').virtualMachineExtensionMultiIndex0ForestTemplateUrl]"
   },
   "resources": [
     {
@@ -41,6 +43,92 @@
         "parameters": {
           "virtualMachineSettings": {
             "value": "[variables('virtualMachineSettings')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "virtualMachineDataDiskExtensionDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Virtual machine extension deployment - Data disk",
+      "dependsOn": [
+        "virtualMachineDeployment"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('virtualMachineExtensionMultiIndex0TemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualMachineSettings": {
+            "value": "[variables('virtualMachineSettings').dataDiskExtension]"
+          }
+        }
+      }
+    },
+    {
+      "name": "virtualMachineFirstNodeConfigExtensionDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Virtual machine extension deployment - First Node Config",
+      "dependsOn": [
+        "virtualMachineDeployment",
+        "virtualMachineDataDiskExtensionDeployment"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('virtualMachineExtensionMultiIndex0TemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualMachineSettings": {
+            "value": "[variables('virtualMachineSettings').firstNodeConfigExtension]"
+          }
+        }
+      }
+    },
+    {
+      "name": "markLogicDataBaseExtensionDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Virtual machine extension deployment - DataBase",
+      "dependsOn": [
+        "virtualMachineFirstNodeConfigExtensionDeployment"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('virtualMachineExtensionMultiIndex0TemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualMachineSettings": {
+            "value": "[variables('virtualMachineSettings').createDataBaseExtension]"
+          }
+        }
+      }
+    },
+    
+    {
+      "name": "markLogicForestExtensionDeployment",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('deploymentApiVersion')]",
+      "comments": "Virtual machine extension deployment - Forest",
+      "dependsOn": [
+        "markLogicDataBaseExtensionDeployment"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('virtualMachineExtensionMultiIndex0ForestTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualMachineSettings": {
+            "value": "[variables('virtualMachineSettings').createForestExtension]"
           }
         }
       }

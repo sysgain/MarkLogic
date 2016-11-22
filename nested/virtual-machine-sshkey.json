@@ -55,7 +55,7 @@
           "computername": "[concat(variables('vmName'),copyIndex())]",
           "adminUsername": "[variables('adminUsername')]",
           "linuxConfiguration": {
-            "disablePasswordAuthentication": "true",
+            "disablePasswordAuthentication": true,
             "ssh": {
               "publicKeys": [
                 {
@@ -87,7 +87,7 @@
               "diskSizeGB": "[variables('dataDiskSizeGB')]",
               "lun": 0,
               "vhd": {
-                "Uri": "[concat('http://', variables('dataDiskStorageAccountName'), '.blob.core.windows.net/',variables('vmStorageAccountContainerName'),copyIndex(),'/', variables('vmName'),'-datadisk.vhd')]"
+                "uri": "[concat('http://', variables('dataDiskStorageAccountName'), '.blob.core.windows.net/',variables('vmStorageAccountContainerName'),copyIndex(),'/', variables('vmName'),'-datadisk.vhd')]"
               },
               "createOption": "Empty"
             }
