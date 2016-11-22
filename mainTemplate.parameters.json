@@ -8,6 +8,9 @@
         "clusterPrefix": {
             "value": "ml"
         },
+        "clusterType": {
+            "value": "SingleNode"
+        },
         "clusterNodeCount": {
             "value": 3
         },
@@ -35,31 +38,24 @@
         "virtualNetworkAddressPrefix": {
             "value": "10.0.0.0/16"
         },
-        "subnetName": {
+        "subnet1Name": {
             "value": "shsubnet"
         },
-        "subnetPrefix": {
+        "subnet1Prefix": {
             "value": "10.0.1.0/24"
         },
         "loadBalancerType": {
             "value": "external"
         },
-        "internalLoadBalancerPrivateIP": {
-            "value": "10.0.1.10"
-        },
-        "loadBalancerpublicIPdnsPrefix": {
-            "value": "mlloadbalancer"
-        },
-        "nodepublicIPdnsPrefix": {
-            "value": "mlnode"
-        },
+       
+       
         "adminUsername": {
             "value": "sysgain"
         },
         "authenticationType": {
             "value": "password"
         },
-        "adminPasswordOrSshKey": {
+        "adminPassword": {
             "value": "Sysga1n4205!"
         },
         "sshPublicKey": {
@@ -71,9 +67,7 @@
         "adminPasswordMarkLogicPortal": {
             "value": "Sysga1n4205!"
         },
-        "markLogicDatabaseName": {
-            "value": "mldatabase"
-        },
+     
         "baseUrl": {
             "value": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldev-nov21"
         }
