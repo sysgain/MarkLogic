@@ -8,9 +8,6 @@
         "clusterPrefix": {
             "value": "ml"
         },
-        "clusterType": {
-            "value": "SingleNode"
-        },
         "clusterNodeCount": {
             "value": 3
         },
@@ -18,34 +15,43 @@
             "value": "Standard_DS11_v2"
         },
         "clusterNodeSize": {
-            "value": "Standard_DS13_v2"
+            "value": "Standard_DS3_v2"
         },
         "dataDiskStorageAccountType": {
             "value": "Standard_LRS"
         },
-        "MarkLogicLicenseKey": {
-            "value": "dghturtytreytryusry"
+        "markLogicLicenseKey": {
+            "value": "xxhshasd-2313dasaf-fdfdsf-kjdalsyn-jwvek"
         },
         "virtualNetworkNewOrExisting": {
             "value": "new"
         },
         "virtualNetworkExistingRGName": {
-            "value": "ss"
+            "value": "null"
         },
         "virtualNetworkName": {
-            "value": "mklvnet"
+            "value": "ml-vnet"
         },
         "virtualNetworkAddressPrefix": {
             "value": "10.0.0.0/16"
         },
-        "subnet1Name": {
+        "subnetName": {
             "value": "shsubnet"
         },
-        "subnet1Prefix": {
+        "subnetPrefix": {
             "value": "10.0.1.0/24"
         },
         "loadBalancerType": {
             "value": "external"
+        },
+        "internalLoadBalancerPrivateIP": {
+            "value": "10.0.1.10"
+        },
+        "loadBalancerpublicIPdnsPrefix": {
+            "value": "mlloadbalancer"
+        },
+        "nodepublicIPdnsPrefix": {
+            "value": "mlnode"
         },
         "adminUsername": {
             "value": "sysgain"
@@ -53,17 +59,20 @@
         "authenticationType": {
             "value": "password"
         },
-        "adminPassword": {
+        "adminPasswordOrSshKey": {
             "value": "Sysga1n4205!"
         },
         "sshPublicKey": {
-            "value": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEA2DRbYvAwx7XMtCSnsNN2CR0M74TH6ewGTtipdvZMujYlMzuQWmD9r2UnIGPY0Bp2s0WNoLnslhVaYSRjItJF9p7OAFmjWTUgJrsm47+Pp5yD6vwt1A07iD7Wcn1HiYGs7FzoIo8reuyR6khI7rbgzNfxdgMpXOpoewjZOUvQt1vEfIqUVQcmcZ9A3069YAoUIcKgBNzC5ciJoqJrfxJG7GH+2irDIGeaYv0RoE/n95sBX+yRlzo0hH0z2JkUeP063NzrC2AT0qQrE6WnoLg6eS8rWHrAVdIgvP6llB2j4G89PewrVuJu9bSpQur2IGl1HbR7gycsgoxrQZmEPhDycw== rsa-key-20161118"
+            "value": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAnI/oIyLbvZ55ioKQrJln5KaHE+7L9xzYiyKwJYenJHrfZwRJywGkQe5cwkAYdKD/FhArTwCeQHTjAXxr+/jwel552kszumKkoY1xXIN51ybqopIthEO1u5dvK1GKAuyhBVeVTQsOU4i42yXB3wBmb8q7iyMIckZdA6m2HEP+UmVpfIV3GHvWQxfu105nKTSR7/a7TG8xiry36ti/fZ5KJxVfY6jFY18C57HVhIKOg2RF3fvcl3sMHEVU/dvJWsnkX7wk+ITAXtRFK15zc87qnk3fAhW3z66UWEsAfkppc4lQH/YhuyAx5JJKNdD+crM4Y74uQIgT1Y2gYWqathm0QQ== rsa-key-20161122"
         },
         "adminUsernameMarkLogicPortal": {
             "value": "sysgain"
         },
         "adminPasswordMarkLogicPortal": {
             "value": "Sysga1n4205!"
+        },
+        "markLogicDatabaseName": {
+            "value": "mldatabase"
         },
         "baseUrl": {
             "value": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldev-nov21"
