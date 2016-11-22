@@ -47,8 +47,6 @@
         "loadBalancerType": {
             "value": "external"
         },
-       
-       
         "adminUsername": {
             "value": "sysgain"
         },
@@ -67,7 +65,6 @@
         "adminPasswordMarkLogicPortal": {
             "value": "Sysga1n4205!"
         },
-     
         "baseUrl": {
             "value": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldev-nov21"
         }
