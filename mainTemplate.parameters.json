@@ -20,7 +20,7 @@
         "dataDiskStorageAccountType": {
             "value": "Standard_LRS"
         },
-        "MarkLogicLicenseKey": {
+        "markLogicLicenseKey": {
             "value": "xxhshasd-2313dasaf-fdfdsf-kjdalsyn-jwvek"
         },
         "virtualNetworkNewOrExisting": {
