@@ -195,7 +195,7 @@
     },
     "sshPublicKey": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAnI/oIyLbvZ55ioKQrJln5KaHE+7L9xzYiyKwJYenJHrfZwRJywGkQe5cwkAYdKD/FhArTwCeQHTjAXxr+/jwel552kszumKkoY1xXIN51ybqopIthEO1u5dvK1GKAuyhBVeVTQsOU4i42yXB3wBmb8q7iyMIckZdA6m2HEP+UmVpfIV3GHvWQxfu105nKTSR7/a7TG8xiry36ti/fZ5KJxVfY6jFY18C57HVhIKOg2RF3fvcl3sMHEVU/dvJWsnkX7wk+ITAXtRFK15zc87qnk3fAhW3z66UWEsAfkppc4lQH/YhuyAx5JJKNdD+crM4Y74uQIgT1Y2gYWqathm0QQ== rsa-key-20161122",
       "metadata": {
         "description": "SSH public key"
       }
