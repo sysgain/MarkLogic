@@ -18,7 +18,7 @@
             "value": "Standard_DS11_v2"
         },
         "clusterNodeSize": {
-            "value": "Standard_DS3_v2"
+            "value": "Standard_DS13_v2"
         },
         "dataDiskStorageAccountType": {
             "value": "Standard_LRS"
