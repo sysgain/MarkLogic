@@ -1,7 +1,7 @@
-Feature: Provision a azuredeploy
+Feature: Provision a mainTemplate
 
 	Background:
-    	Given I have opened the "/azuredeploy.json" template
+    	Given I have opened the "/mainTemplate.json" template
 
     
     Scenario: Validate the Template Against the Azure Validator
