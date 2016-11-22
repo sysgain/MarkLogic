@@ -16,7 +16,6 @@ Feature: Provision a mainTemplate
         #Template.json
         | $schema                           				| yes   | template  |
         | contentVersion                    				| yes   | template  |
-        | parameters.location.defaultValue  				| yes   | template  |
         | testKey                           				| no    | template  |
         | parameters.clusterPrefix.defaultValue             | yes   | template  | 
         | parameters.clusterNodeCount.defaultValue          | yes   | template  |
