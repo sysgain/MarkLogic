@@ -128,7 +128,7 @@
                         "name": "nodeCount",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Number of Nodes",
-                        "defaultValue": "3",
+                        "defaultValue": 3,
                         "toolTip": "Number of nodes in the cluster",
                         "constraints": {
                             "allowedValues": [
