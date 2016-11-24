@@ -216,7 +216,7 @@
                 "description": "Base URL for Marketplace",
                 "artifactsBaseUrl": ""
             },
-            "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldev-nov21"
+            "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldevchange"
         }
     },
     "variables": {
