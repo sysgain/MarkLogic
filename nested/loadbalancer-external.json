@@ -79,6 +79,28 @@
         "backendPort": 8001,
         "enableFloatingIP": false
       }
+    },
+    {
+      "apiVersion": "[variables('networkApiVersion')]",
+      "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+      "name": "[concat(variables('loadBalancerName'), '/', 'adminapp-', variables('clusterPrefix'), copyIndex())]",
+      "location": "[variables('location')]",
+      "copy": {
+        "name": "lbNatLoop",
+        "count": "[variables('count')]"
+      },
+      "dependsOn": [
+        "[variables('loadBalancerbId')]"
+      ],
+      "properties": {
+        "frontendIPConfiguration": {
+          "id": "[variables('lbIpConfigId')]"
+        },
+        "protocol": "Tcp",
+        "frontendPort": "[copyIndex(3300)]",
+        "backendPort": 8000,
+        "enableFloatingIP": false
+      }
     }
   ]
 }
