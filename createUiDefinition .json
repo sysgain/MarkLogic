@@ -471,6 +471,7 @@
             "clusterNodeSize": "[steps('nodesSettings').multiNodeVmSize9]",
             "markLogicLicenseKey": "[steps('markLogicPortal').MarkLogicLicenseKey]",
             "markLogicLicensee": "[steps('markLogicPortal').MarkLogicLicensee]",
+            "virtualNetworkName": "[steps('networkSettings').vnetSpec.name]",
             "virtualNetworkNewOrExisting": "[steps('networkSettings').vnetSpec.newOrExisting]",
             "virtualNetworkExistingRGName": "[steps('networkSettings').vnetSpec.resourceGroup]",
             "virtualNetworkAddressPrefix": "[steps('networkSettings').vnetSpec.addressPrefix]",
