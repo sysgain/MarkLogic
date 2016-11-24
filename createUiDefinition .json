@@ -124,7 +124,6 @@
                             "validationMessage": "Cluster names must be between 3 and 24 characters long, and can contain only numbers and lowercase letters."
                         }
                     },
-                   
                     {
                         "name": "nodeCount",
                         "type": "Microsoft.Common.DropDown",
@@ -141,25 +140,20 @@
                                     "label": "3",
                                     "value": 3
                                 },
-                               
                                 {
                                     "label": "5",
                                     "value": 5
                                 },
-                               
                                 {
                                     "label": "7",
                                     "value": 7
                                 },
-                                
                                 {
                                     "label": "9",
                                     "value": 9
                                 }
-                               
                             ]
                         }
-                       
                     },
                     {
                         "name": "singleNodeVmSize",
@@ -209,7 +203,6 @@
                             "Standard_GS3"
                         ],
                         "constraints": {
-                            
                             "allowedSizes": [
                                 "Standard_DS13",
                                 "Standard_DS14",
@@ -372,19 +365,15 @@
             "location": "[location()]",
             "clusterPrefix": "[steps('nodesSettings').clusterName]",
             "clusterNodeCount": "[steps('nodesSettings').nodeCount]",
-
             "adminUsername": "[basics('Basics').vmUsername]",
-            "adminPasswordOrSshKey": "[basics('Basics').SSHCredentials.password]",
             "adminPasswordOrSshKey": "[basics('Basics').SSHCredentials.sshPublicKey]",
             "authenticationType": "[basics('Basics').SSHCredentials.authenticationType]",
             "adminUsernameMarkLogicPortal": "[steps('markLogicPortal').adminUsernameMarkLogicPortal]",
             "adminPasswordMarkLogicPortal": "[steps('markLogicPortal').adminPasswordMarkLogicPortal]",
-            
             "singleNodeSize": "[steps('nodesSettings').singleNodeVmSize]",
             "clusterNodeSize": "[steps('nodesSettings').multiNodeVmSize]",
             "markLogicLicenseKey": "[steps('markLogicPortal').MarkLogicLicenseKey]",
             "markLogicLicensee": "[steps('markLogicPortal').MarkLogicLicensee]",
-           
             "virtualNetworkNewOrExisting": "[steps('networkSettings').vnetSpec.newOrExisting]",
             "virtualNetworkExistingRGName": "[steps('networkSettings').vnetSpec.resourceGroup]",
             "virtualNetworkAddressPrefix": "[steps('networkSettings').vnetSpec.addressPrefix]",
@@ -395,7 +384,6 @@
             "loadBalancerType": "[steps('networkSettings').loadBalancerType]",
             "internalLoadBalancerPrivateIP": "[steps('networkSettings').internalLoadBalancerPrivateIP]",
             "dataDiskStorageAccountType": "[steps('nodesSettings').storageAccount]"
-            
         }
     }
 }
