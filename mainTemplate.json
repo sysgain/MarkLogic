@@ -380,17 +380,6 @@
                     "[variables('templateUrls').additionalNodesConfigScriptUrl]"
                 ],
                 "commandToExecute": "[concat('sh setup-additional-nodes.sh',' ', parameters('clusterPrefix'), '0', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ','anyauth 5 10 localhost')]"
-            },
-            "createDataBaseExtension": {
-                "location": "[parameters('location')]",
-                "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
-                "vmName": "[parameters('clusterPrefix')]",
-                "count": 1,
-                "vmExtensionName": "extension",
-                "customScriptsUrl": [
-                    "[variables('templateUrls').createDataBaseScriptUrl]"
-                ],
-                "commandToExecute": "[concat('sh create-database.sh',' ', 'localhost', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ',parameters('markLogicDatabaseName'))]"
             }
            
         },
@@ -412,8 +401,7 @@
             "virtualMachineExtensionMultiIndex0ForestTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-0-forest.json')]",
             "dataDiskMountScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'data-disk-mount.sh')]",
             "firstNodeConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-first-node.sh')]",
-            "additionalNodesConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-additional-nodes.sh')]",
-            "createDataBaseScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'create-database.sh')]"
+            "additionalNodesConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-additional-nodes.sh')]"
             
         }
     },
