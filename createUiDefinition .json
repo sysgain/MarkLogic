@@ -481,7 +481,7 @@
             "loadBalancerpublicIPdnsPrefix": "[steps('networkSettings').loadBalancerPublicIpAddressPrefix.domainNameLabel]",
             "loadBalancerType": "[steps('networkSettings').loadBalancerType]",
             "internalLoadBalancerPrivateIP": "[steps('networkSettings').internalLoadBalancerPrivateIP]",
-            "dataDiskStorageAccountType": "[steps('nodesSettings').storageAccount]"
+            "dataDiskStorageAccountType": "[steps('nodesSettings').storageAccount.type]"
         }
     }
 }
