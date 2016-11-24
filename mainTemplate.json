@@ -208,18 +208,12 @@
             "metadata": {
                 "description": "Admin password for MarkLogic Admin Portal"
             }
-        },
-      
-        "baseUrl": {
-            "type": "string",
-            "metadata": {
-                "description": "Base URL for Marketplace",
-                "artifactsBaseUrl": ""
-            },
-            "defaultValue": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldevchange"
         }
+      
+       
     },
     "variables": {
+        "baseUrl":"https://raw.githubusercontent.com/sysgain/MarkLogic/mldevchange",
         "uniqueString": "[substring(uniquestring(resourceGroup().id),0,8)]",
         "publicIpTemplate": "[concat('lbPublicIp',parameters('loadBalancerType'))]",
         "lbPublicIpexternal": "publicip.json",
@@ -384,24 +378,24 @@
            
         },
         "templateUrls": {
-            "sharedResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'shared-resources.json')]",
-            "virtualNetworkTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'vnet-', parameters('virtualNetworkNewOrExisting'), '.json')]",
-            "loadBalancerTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'loadbalancer-',parameters('loadBalancerType'),'.json')]",
-            "storageAccountTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'storage-account.json')]",
-            "publicIpMultiTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'publicip-multi.json')]",
-            "networkResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-resources.json')]",
-            "externalLoadBlancerpublicIpTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', variables(variables('publicIpTemplate')))]",
-            "nodeNetworkInterfacesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-interface-multi.json')]",
-            "nodeNetworkSecurityTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'network-security-group.json')]",
-            "availabilitySetTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'availability-set.json')]",
-            "virtualMachineDeploymentTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'virtual-machine-deployment-',variables(variables('nodeVmSize')).nodes,'.json')]",
-            "virtualMachineTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'virtual-machine-',parameters('authenticationType'),'.json')]",
-            "virtualMachineExtensionMultiIndex0TemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-0.json')]",
-            "virtualMachineExtensionMultiIndex1TemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-1.json')]",
-            "virtualMachineExtensionMultiIndex0ForestTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'extension-multi-index-0-forest.json')]",
-            "dataDiskMountScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'data-disk-mount.sh')]",
-            "firstNodeConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-first-node.sh')]",
-            "additionalNodesConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-additional-nodes.sh')]"
+            "sharedResourcesTemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'shared-resources.json')]",
+            "virtualNetworkTemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'vnet-', parameters('virtualNetworkNewOrExisting'), '.json')]",
+            "loadBalancerTemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'loadbalancer-',parameters('loadBalancerType'),'.json')]",
+            "storageAccountTemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'storage-account.json')]",
+            "publicIpMultiTemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'publicip-multi.json')]",
+            "networkResourcesTemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'network-resources.json')]",
+            "externalLoadBlancerpublicIpTemplateUrl": "[concat(variables('baseUrl'), '/nested/', variables(variables('publicIpTemplate')))]",
+            "nodeNetworkInterfacesTemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'network-interface-multi.json')]",
+            "nodeNetworkSecurityTemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'network-security-group.json')]",
+            "availabilitySetTemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'availability-set.json')]",
+            "virtualMachineDeploymentTemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'virtual-machine-deployment-',variables(variables('nodeVmSize')).nodes,'.json')]",
+            "virtualMachineTemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'virtual-machine-',parameters('authenticationType'),'.json')]",
+            "virtualMachineExtensionMultiIndex0TemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'extension-multi-index-0.json')]",
+            "virtualMachineExtensionMultiIndex1TemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'extension-multi-index-1.json')]",
+            "virtualMachineExtensionMultiIndex0ForestTemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'extension-multi-index-0-forest.json')]",
+            "dataDiskMountScriptUrl": "[concat(variables('baseUrl'), '/scripts/', 'data-disk-mount.sh')]",
+            "firstNodeConfigScriptUrl": "[concat(variables('baseUrl'), '/scripts/', 'setup-first-node.sh')]",
+            "additionalNodesConfigScriptUrl": "[concat(variables('baseUrl'), '/scripts/', 'setup-additional-nodes.sh')]"
             
         }
     },
