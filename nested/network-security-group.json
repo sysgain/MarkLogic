@@ -67,7 +67,7 @@
             "properties": {
               "protocol": "*",
               "sourcePortRange": "*",
-              "destinationPortRange": "8000",
+              "destinationPortRange": "8001",
               "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",
@@ -93,7 +93,7 @@
             "properties": {
               "protocol": "*",
               "sourcePortRange": "*",
-              "destinationPortRange": "8001",
+              "destinationPortRange": "8000",
               "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",

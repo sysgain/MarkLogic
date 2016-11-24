@@ -209,13 +209,7 @@
                 "description": "Admin password for MarkLogic Admin Portal"
             }
         },
-        "markLogicDatabaseName": {
-            "type": "string",
-            "defaultValue": "mldatabase",
-            "metadata": {
-                "description": "MarkLogic Database Name"
-            }
-        },
+      
         "baseUrl": {
             "type": "string",
             "metadata": {
@@ -397,21 +391,8 @@
                     "[variables('templateUrls').createDataBaseScriptUrl]"
                 ],
                 "commandToExecute": "[concat('sh create-database.sh',' ', 'localhost', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ',parameters('markLogicDatabaseName'))]"
-            },
-            "createForestExtension": {
-                "location": "[parameters('location')]",
-                "computeApiVersion": "[variables('apiVersions').computeApiVersion]",
-                "vmName": "[parameters('clusterPrefix')]",
-                "count": "[parameters('clusterNodeCount')]",
-                "vmExtensionName": "extension",
-                "customScriptsUrl": [
-                    "[variables('templateUrls').createForestScriptUrl]"
-                ],
-                "forestNamePrefix": "mlforest",
-                "mlUserName": "[parameters('adminUsernameMarkLogicPortal')]",
-                "mlPassword": "[parameters('adminPasswordMarkLogicPortal')]",
-                "mldatabaseName": "[parameters('markLogicDatabaseName')]"
             }
+           
         },
         "templateUrls": {
             "sharedResourcesTemplateUrl": "[concat(parameters('baseUrl'), '/nested/', 'shared-resources.json')]",
@@ -432,8 +413,8 @@
             "dataDiskMountScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'data-disk-mount.sh')]",
             "firstNodeConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-first-node.sh')]",
             "additionalNodesConfigScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'setup-additional-nodes.sh')]",
-            "createDataBaseScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'create-database.sh')]",
-            "createForestScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'create-forest.sh')]"
+            "createDataBaseScriptUrl": "[concat(parameters('baseUrl'), '/scripts/', 'create-database.sh')]"
+            
         }
     },
     "resources": [

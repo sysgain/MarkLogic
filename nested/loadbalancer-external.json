@@ -44,27 +44,7 @@
             "name": "[variables('loadBalancerBackendPoolName')]"
           }
         ],
-        "loadBalancingRules": [
-          {
-            "name": "lbRule",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('lbIpConfigId')]"
-              },
-              "backendAddressPool": {
-                "id": "[concat(variables('loadBalancerbId'), '/backendAddressPools/', variables('loadBalancerBackendPoolName'))]"
-              },
-              "protocol": "Tcp",
-              "frontendPort": 8000,
-              "backendPort": 8000,
-              "enableFloatingIP": false,
-              "idleTimeoutInMinutes": 5,
-              "probe": {
-                "id": "[concat(variables('loadBalancerbId'),'/probes/mlProbe')]"
-              }
-            }
-          }
-        ],
+        "loadBalancingRules": [],
         "probes": [
           {
             "name": "mlProbe",
