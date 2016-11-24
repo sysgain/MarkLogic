@@ -228,7 +228,7 @@
                             "sku": "marklogic_80-preview"
                         },
                         "count": "[steps('nodesSettings').nodeCount]",
-                        "visible": "[notequals(steps('nodesSettings').nodeCount, 1)]"
+                        "visible": "[equals(steps('nodesSettings').nodeCount, 1)]"
                     },
                     {
                         "name": "storageAccount",
