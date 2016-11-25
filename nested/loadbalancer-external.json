@@ -98,7 +98,7 @@
                 },
                 "protocol": "Tcp",
                 "frontendPort": "[copyIndex(3300)]",
-                "backendPort": 8002,
+                "backendPort": 8000,
                 "enableFloatingIP": false
             }
         }
