@@ -78,7 +78,7 @@
         "frontendIPConfiguration": {
           "id": "[variables('lbIpConfigId')]"
         },
-        "protocol": "tcp",
+        "protocol": "Tcp",
         "frontendPort": "[copyIndex(2200)]",
         "backendPort": 8001,
         "enableFloatingIP": false
@@ -87,7 +87,7 @@
     {
       "apiVersion": "[variables('networkApiVersion')]",
       "type": "Microsoft.Network/loadBalancers/inboundNatRules",
-      "name": "[concat(variables('loadBalancerName'), '/', 'adminapp-', variables('clusterPrefix'), copyIndex())]",
+      "name": "[concat(variables('loadBalancerName'), '/', 'adminquery-', variables('clusterPrefix'), copyIndex())]",
       "location": "[variables('location')]",
       "copy": {
         "name": "lbNatLoop",
