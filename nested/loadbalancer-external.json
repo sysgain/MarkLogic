@@ -83,7 +83,7 @@
         {
             "apiVersion": "[variables('networkApiVersion')]",
             "type": "Microsoft.Network/loadBalancers/inboundNatRules",
-            "name": "[concat(variables('loadBalancerName'), '/', 'admin-', variables('clusterPrefix'), copyIndex())]",
+            "name": "[concat(variables('loadBalancerName'), '/', 'adminquery-', variables('clusterPrefix'), copyIndex())]",
             "location": "[variables('location')]",
             "copy": {
                 "name": "lbNatLoop",
