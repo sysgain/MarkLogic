@@ -20,6 +20,9 @@
         "dataDiskStorageAccountType": {
             "value": "Standard_LRS"
         },
+        "markLogicLicensee":{
+            "value": "marklogic"
+        },
         "markLogicLicenseKey": {
             "value": "xxhshasd-2313dasaf-fdfdsf-kjdalsyn-jwvek"
         },
@@ -62,9 +65,7 @@
         "adminPasswordOrSshKey": {
             "value": "Sysga1n4205!"
         },
-        "sshPublicKey": {
-            "value": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAnI/oIyLbvZ55ioKQrJln5KaHE+7L9xzYiyKwJYenJHrfZwRJywGkQe5cwkAYdKD/FhArTwCeQHTjAXxr+/jwel552kszumKkoY1xXIN51ybqopIthEO1u5dvK1GKAuyhBVeVTQsOU4i42yXB3wBmb8q7iyMIckZdA6m2HEP+UmVpfIV3GHvWQxfu105nKTSR7/a7TG8xiry36ti/fZ5KJxVfY6jFY18C57HVhIKOg2RF3fvcl3sMHEVU/dvJWsnkX7wk+ITAXtRFK15zc87qnk3fAhW3z66UWEsAfkppc4lQH/YhuyAx5JJKNdD+crM4Y74uQIgT1Y2gYWqathm0QQ== rsa-key-20161122"
-        },
+       
         "adminUsernameMarkLogicPortal": {
             "value": "sysgain"
         },
@@ -73,9 +74,6 @@
         },
         "markLogicDatabaseName": {
             "value": "mldatabase"
-        },
-        "baseUrl": {
-            "value": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldev-nov21"
         }
     }
 }
