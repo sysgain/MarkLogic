@@ -89,7 +89,7 @@
             }
           },
           {
-            "name": "app-services",
+            "name": "query-console",
             "properties": {
               "protocol": "*",
               "sourcePortRange": "*",
