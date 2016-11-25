@@ -16,10 +16,11 @@ BASE_DIR="/media"
 
 #Log file to record all the activities
 NOW=$(date +"%Y-%m-%d")
+mkdir ~/logsdir
 
 check_for_new_disks() {
 
-    echo "Checking for new disks started..........." >> log-$NOW.log
+    echo "Checking for new disks started..........." >> ~/logsdir/log-$NOW.log
     # Looks for unpartitioned disks
     declare -a RET
     DEVS=($(ls -1 /dev/sd*|egrep -v "${DISKS_TO_IGNORE}"|egrep -v "[0-9]$"))
@@ -36,7 +37,7 @@ check_for_new_disks() {
 }
 
 check_next_mountpoint() {
-    echo "Checking for next mount point  started..........." >> log-$NOW.log
+    echo "Checking for next mount point  started..........." >> ~/logsdir/log-$NOW.log
     DIRS=($(ls -1d ${BASE_DIR}/data* 2>&1| sort --version-sort))
     if [ -z "${DIRS[0]}" ];
     then
@@ -51,7 +52,7 @@ check_next_mountpoint() {
 }
 
 insert_to_fstab() {
-    echo "inserting the UUID to /etc/fstab  started..........." >> log-$NOW.log
+    echo "inserting the UUID to /etc/fstab  started..........." >> ~/logsdir/log-$NOW.log
     UUID=${1}
     MOUNTPOINT=${2}
     grep "${UUID}" /etc/fstab >/dev/null 2>&1
@@ -60,8 +61,8 @@ insert_to_fstab() {
         echo "Not adding ${UUID} to fstab again (it's already there!)"
     else
         LINE="UUID=${UUID}        ${MOUNTPOINT}        ext4        defaults,nofail        1 2"
-		echo "inserting the following entry to /etc/fstab..............." >> log-$NOW.log
-		echo "${LINE}" >> log-$NOW.log
+		echo "inserting the following entry to /etc/fstab..............." >> ~/logsdir/log-$NOW.log
+		echo "${LINE}" >> ~/logsdir/log-$NOW.log
         echo -e "${LINE}" >> /etc/fstab
     fi
 
@@ -84,15 +85,13 @@ has_filesystem() {
 }
 
 do_partition() {
-echo "Partitioning the disk started..................." >> log-$NOW.log
+echo "Partitioning the disk started..................." >> ~/logsdir/log-$NOW.log
 # This function creates one (1) primary partition on the
 # disk, using all available space
     DISK=${1}
     echo "n
 p
 1
-
-
 w"| fdisk "${DISK}" > /dev/null 2>&1
 
 #
@@ -100,21 +99,21 @@ w"| fdisk "${DISK}" > /dev/null 2>&1
 # from fdisk and not from echo
 if [ ${PIPESTATUS[1]} -ne 0 ];
 then
-    echo "An error occurred partitioning ${DISK}" >&2 >> log-$NOW.log
-    echo "I cannot continue" >&2 >> log-$NOW.log
+    echo "An error occurred partitioning ${DISK}" >&2 >> ~/logsdir/log-$NOW.log
+    echo "I cannot continue" >&2 >> ~/logsdir/log-$NOW.log
     exit 2
 fi
 
 }
 
-echo "#############################################################################" >> log-$NOW.log
-echo "                                                                    " >> log-$NOW.log
-echo "					 Log file: Data Disk Mount                        " >> log-$NOW.log
-echo "The data-disk mount script is started at:  `date`" >> log-$NOW.log
-echo "                                                                    " >> log-$NOW.log
-echo "#############################################################################" >> log-$NOW.log
-echo "                                                                    " >> log-$NOW.log
-echo "                                                                    " >> log-$NOW.log
+echo "#############################################################################" >> ~/logsdir/log-$NOW.log
+echo "                                                                    " >> ~/logsdir/log-$NOW.log
+echo "					 Log file: Data Disk Mount                        " >> ~/logsdir/log-$NOW.log
+echo "The data-disk mount script is started at:  `date`" >> ~/logsdir/log-$NOW.log
+echo "                                                                    " >> ~/logsdir/log-$NOW.log
+echo "#############################################################################" >> ~/logsdir/log-$NOW.log
+echo "                                                                    " >> ~/logsdir/log-$NOW.log
+echo "                                                                    " >> ~/logsdir/log-$NOW.log
 
 if [ -z "${1}" ];
 then
@@ -126,35 +125,35 @@ if [ "$DISKS" == "" ]
 then 
     echo "There are no new disks"
 else
-echo "Disks are ${DISKS[@]}" >> log-$NOW.log
+echo "Disks are ${DISKS[@]}" >> ~/logsdir/log-$NOW.log
 for DISK in "${DISKS[@]}";
 do
-    echo "Working on ${DISK}" >> log-$NOW.log
+    echo "Working on ${DISK}" >> ~/logsdir/og-$NOW.log
     is_partitioned ${DISK}
     if [ ${?} -ne 0 ];
     then
 	
-        echo "${DISK} is not partitioned, partitioning" >> log-$NOW.log
+        echo "${DISK} is not partitioned, partitioning" >> ~/logsdir/log-$NOW.log
         do_partition ${DISK}
-		echo "Partitioning the disk ended..................." >> log-$NOW.log
+		echo "Partitioning the disk ended..................." >> ~/logsdir/log-$NOW.log
     fi
     PARTITION=$(fdisk -l ${DISK}|grep -A 1 Device|tail -n 1|awk '{print $1}')
     has_filesystem ${PARTITION}
     
 	if [ ${?} -ne 0 ];
     then
-        echo "Creating filesystem on ${PARTITION}." >> log-$NOW.log
+        echo "Creating filesystem on ${PARTITION}." >> ~/logsdir/log-$NOW.log
         #echo "Press Ctrl-C if you don't want to destroy all data on ${PARTITION}"
         #sleep 5
         mkfs -j -t ext4 ${PARTITION}
     fi
 	
     MOUNTPOINT=$(check_next_mountpoint)
-    echo "Next mount point appears to be ${MOUNTPOINT}" >> log-$NOW.log
+    echo "Next mount point appears to be ${MOUNTPOINT}" >> ~/logsdir/log-$NOW.log
     [ -d "${MOUNTPOINT}" ] || mkdir "${MOUNTPOINT}"
 	UUID=$(blkid -u filesystem ${PARTITION}|awk -F "[= ]" '{print $3}'|tr -d "\"")
     insert_to_fstab "${UUID}" "${MOUNTPOINT}"
-    echo "Mounting disk ${PARTITION} on ${MOUNTPOINT}" >> log-$NOW.log
+    echo "Mounting disk ${PARTITION} on ${MOUNTPOINT}" >> ~/logsdir/log-$NOW.log
     mount "${MOUNTPOINT}"
 	
 	#making the drive writable
