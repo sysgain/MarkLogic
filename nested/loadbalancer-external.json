@@ -18,6 +18,7 @@
         "lbIpConfigName": "[parameters('networkSettings').lbIpConfigName]",
         "loadBalancerBackendPoolName": "[parameters('networkSettings').loadBalancerBackendPoolName]",
         "loadBalancerbId": "[resourceId('Microsoft.Network/loadBalancers',variables('loadBalancerName'))]",
+       
         "lbIpConfigId": "[concat(variables('loadBalancerbId'),'/frontendIPConfigurations/', variables('lbIpConfigName'))]",
         "clusterPrefix": "[parameters('networkSettings').clusterPrefix]"
     },

@@ -56,6 +56,9 @@
               "loadBalancerInboundNatRules": [
                 {
                   "id": "[concat(variables('loadBalancerbId'),'/inboundNatRules/admin-',variables('clusterPrefix'), copyindex())]"
+                },
+                {
+                  "id": "[concat(variables('loadBalancerbId'),'/inboundNatRules/adminquery-',variables('clusterPrefix'), copyindex())]"
                 }
               ]
             }
