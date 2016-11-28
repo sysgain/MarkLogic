@@ -185,6 +185,7 @@
                             "Standard_GS1"
                         ],
                         "constraints": {
+                            "required": "[equals(steps('nodesSettings').clusterType, 'SingleNode')]",
                             "allowedSizes": [
                                 "Standard_DS11",
                                 "Standard_DS12",
@@ -209,7 +210,7 @@
                             "sku": "marklogic_80-preview"
                         },
                         "count": 1,
-                        "visible": "[equals(steps('nodesSettings').clusterType, SingleNode)]"
+                        "visible": "[equals(steps('nodesSettings').clusterType, 'SingleNode')]"
                     },
                     {
                         "name": "multiNodeVmSize",
@@ -222,6 +223,7 @@
                             "Standard_GS3"
                         ],
                         "constraints": {
+                            "required": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]",
                             "allowedSizes": [
                                 "Standard_DS13",
                                 "Standard_DS14",
@@ -240,7 +242,7 @@
                             "sku": "marklogic_80-preview"
                         },
                         "count": "[steps('nodesSettings').nodeCount]",
-                        "visible": "[equals(steps('nodesSettings').clusterType, MultiNode)]"
+                        "visible": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
                     },                
                     {
                         "name": "storageAccount",
