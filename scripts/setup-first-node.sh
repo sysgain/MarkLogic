@@ -1,9 +1,6 @@
 ######################################################################################################
 #	File         :setup-first-node.sh
 #	Description  : This script will setup the head/first node in the cluster
-#	Author	     : T S Pradeep Kumar
-#	Date	     : 11/9/2016
-#       Version	     : V1.0
 ######################################################################################################
 
 #!/bin/bash
