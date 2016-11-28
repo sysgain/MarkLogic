@@ -26,7 +26,7 @@ RETRY_INTERVAL=$7
 
 #Log file to record all the activities
 NOW=$(date +"%Y-%m-%d")
-
+mkdir /home/sysgain/logfiles
 #############################################################
 # restart_check(hostname, baseline_timestamp, caller_lineno)
 #
@@ -44,7 +44,7 @@ function restart_check {
       return 0
     fi
   done
-  echo "ERROR: Line $3: Failed to restart $1" >> log-setup-first-node-$NOW.log
+  echo "ERROR: Line $3: Failed to restart $1" >> /home/sysgain/logfiles/log-setup-first-node-$NOW.log
   exit 1
 }
 
@@ -62,7 +62,7 @@ AUTH_CURL="${CURL} --${AUTH_MODE} --user ${USER}:${PASS}"
 ###################################################################
 
 # (1) Initialize the server
-echo "Initializing $BOOTSTRAP_HOST..." >> log-setup-first-node-$NOW.log
+echo "Initializing $BOOTSTRAP_HOST..." >> /home/sysgain/logfiles/log-setup-first-node-$NOW.log
 $CURL -X POST -d "" http://${BOOTSTRAP_HOST}:8001/admin/v1/init
 sleep 10
 
@@ -75,12 +75,12 @@ TIMESTAMP=`$CURL -X POST \
    | grep "last-startup" \
    | sed 's%^.*<last-startup.*>\(.*\)</last-startup>.*$%\1%'`
 if [ "$TIMESTAMP" == "" ]; then
-  echo "ERROR: Failed to get instance-admin timestamp." >&2 >> log-setup-first-node-$NOW.log
+  echo "ERROR: Failed to get instance-admin timestamp." >&2 >> /home/sysgain/logfiles/log-setup-first-node-$NOW.log
   exit 1
 fi
 
 # Test for successful restart
 restart_check $BOOTSTRAP_HOST $TIMESTAMP $LINENO
 
-echo "Initialization complete for $BOOTSTRAP_HOST..." >> log-setup-first-node-$NOW.log
+echo "Initialization complete for $BOOTSTRAP_HOST..." >> /home/sysgain/logfiles/log-setup-first-node-$NOW.log
 exit 0
