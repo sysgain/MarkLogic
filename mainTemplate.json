@@ -226,7 +226,7 @@
         },
         "sshkey":{
             "type": "securestring",
-            "defaultValue": "Sysga1n4205!",
+            "defaultValue": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAvnZEoqeHJtHa8LizTlvTlXZ62Vffq0X2o915TfI47QMv+cId0i6j/ZalD4WnuJwdMFlpowT+G04fNImxzSIIpzhsuDuime2ewC7TiCZTz3eRwAzmcGAWthp5W0PlBRvQk1qGvDh95RmHlFoqZ9x/29av89cglUsrOA2qq8zAV2FGpYKZR5FrZuU7vnl10Ie2CpUoE8kEID/DWrZTUDSSQ+kZ5VJwloVwrs/lZo1KbP7hns5yQMEH5oHI8qG43ljKoJfyra4Lyel0SxNa9CeTJBgc1oRh1pZUcmcV/MGmvesFrQKI3Gz/jMzk1tBTp8WwzBVWZF+owV2vtM0ryuSElQ== rsa-key-20161128",
             "metadata": {
                 "description": "OS Admin ssh key"
             }
@@ -244,9 +244,7 @@
             "metadata": {
                 "description": "Admin password for MarkLogic Admin Portal"
             }
-        }
-      
-       
+        }      
     },
     "variables": {       
         "baseUrl":"https://raw.githubusercontent.com/sysgain/MarkLogic/mldevchange",
