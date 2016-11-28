@@ -217,11 +217,18 @@
                 "description": "Authentication type"
             }
         },
-        "adminPasswordOrSshKey": {
+        "password": {
             "type": "securestring",
             "defaultValue": "Sysga1n4205!",
             "metadata": {
                 "description": "OS Admin password"
+            }
+        },
+        "sshkey":{
+            "type": "securestring",
+            "defaultValue": "Sysga1n4205!",
+            "metadata": {
+                "description": "OS Admin ssh key"
             }
         },
         "adminUsernameMarkLogicPortal": {
@@ -241,8 +248,9 @@
       
        
     },
-    "variables": {
+    "variables": {       
         "baseUrl":"https://raw.githubusercontent.com/sysgain/MarkLogic/mldevchange",
+        "adminPasswordOrSshKey":"[parameters(parameters('authenticationType'))]",
         "uniqueString": "[substring(uniquestring(resourceGroup().id),0,8)]",
         "publicIpTemplate": "[concat('lbPublicIp',parameters('loadBalancerType'))]",
         "lbPublicIpexternal": "publicip.json",
@@ -359,7 +367,7 @@
             "vmSize": "[variables(variables('nodeVmSize')).vmSize]",
             "authenticationType": "password",
             "adminUsername": "[parameters('adminUsername')]",
-            "adminPasswordOrSshKey": "[parameters('adminPasswordOrSshKey')]",
+            "adminPasswordOrSshKey": "[variables('adminPasswordOrSshKey')]",
             "imagePublisher": "marklogic",
             "imageOffer": "marklogic_80-preview",
             "imageSKU": "ml_centos",
