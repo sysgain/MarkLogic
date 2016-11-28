@@ -147,35 +147,26 @@
                         "name": "nodeCount",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Number of Nodes",
-                        "defaultValue": 3,
+                        "defaultValue": 1,
                         "toolTip": "Number of nodes in the cluster",
                         "constraints": {
-                            
+                            "visible": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]",
                             "allowedValues": [
                                 {
-                                    "label": "1",
-                                    "value": 1
-                                },
-                                {
                                     "label": "3",
-                                    "value": 3,
-                                    "visible": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
+                                    "value": 3
                                 },
                                 {
                                     "label": "5",
-                                    "value": 5,
-                                    "visible": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
-
+                                    "value": 5
                                 },
                                 {
                                     "label": "7",
-                                    "value": 7,
-                                    "visible": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
+                                    "value": 7
                                 },
                                 {
                                     "label": "9",
-                                    "value": 9,
-                                    "visible": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
+                                    "value": 9
                                 }
                             ]
                         }
@@ -249,7 +240,7 @@
                         },
                         "count": "[steps('nodesSettings').nodeCount]",
                         "visible": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
-                    },                
+                    },
                     {
                         "name": "storageAccount",
                         "type": "Microsoft.Storage.StorageAccountSelector",
@@ -399,7 +390,7 @@
             "adminUsernameMarkLogicPortal": "[steps('markLogicPortal').adminUsernameMarkLogicPortal]",
             "adminPasswordMarkLogicPortal": "[steps('markLogicPortal').adminPasswordMarkLogicPortal]",
             "singleNodeSize": "[steps('nodesSettings').singleNodeVmSize]",
-            "clusterNodeSize": "[steps('nodesSettings').multiNodeVmSize]",         
+            "clusterNodeSize": "[steps('nodesSettings').multiNodeVmSize]",
             "markLogicLicenseKey": "[steps('markLogicPortal').MarkLogicLicenseKey]",
             "markLogicLicensee": "[steps('markLogicPortal').MarkLogicLicensee]",
             "virtualNetworkName": "[steps('networkSettings').vnetSpec.name]",
