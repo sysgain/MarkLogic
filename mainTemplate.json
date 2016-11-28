@@ -46,7 +46,7 @@
         },
         "clusterNodeCount": {
             "type": "int",
-            "defaultValue": 3,
+            "defaultValue": 1,
             "allowedValues": [
                 1,
                 3,

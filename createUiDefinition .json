@@ -153,10 +153,6 @@
                             "required": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]",
                             "allowedValues": [
                                 {
-                                    "label": "1",
-                                    "value": 1
-                                },
-                                {
                                     "label": "3",
                                     "value": 3
                                 },
