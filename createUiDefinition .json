@@ -157,8 +157,7 @@
                                     "value": 1
                                 }
                             ]
-                        },
-                        "visible": "[equals(steps('nodesSettings').clusterType, 'SingleNode')]"
+                        }
                     },
                     {
                         "name": "nodeCount",
