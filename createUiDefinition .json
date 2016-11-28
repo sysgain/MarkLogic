@@ -127,7 +127,7 @@
                     {
                         "name": "clusterType",
                         "type": "Microsoft.Common.DropDown",
-                        "label": "MarkLogic Cluster Type.",
+                        "label": "MarkLogic Cluster Type",
                         "defaultValue": "Single node",
                         "constraints": {
                             "allowedValues": [
