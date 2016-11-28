@@ -150,7 +150,6 @@
                         "defaultValue": 1,
                         "toolTip": "Number of nodes in the cluster",
                         "constraints": {
-                            "visible": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]",
                             "allowedValues": [
                                 {
                                     "label": "3",
@@ -169,7 +168,8 @@
                                     "value": 9
                                 }
                             ]
-                        }
+                        },
+                        "visible": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
                     },
                     {
                         "name": "singleNodeVmSize",
