@@ -152,24 +152,32 @@
                         "constraints": {
                             "allowedValues": [
                                 {
+                                    "label": "1",
+                                    "value": 1,
+                                    "required": "[equals(steps('nodesSettings').clusterType, 'SingleNode')]"
+                                },
+                                {
                                     "label": "3",
-                                    "value": 3
+                                    "value": 3,
+                                    "required": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
                                 },
                                 {
                                     "label": "5",
-                                    "value": 5
+                                    "value": 5,
+                                    "required": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
                                 },
                                 {
                                     "label": "7",
-                                    "value": 7
+                                    "value": 7,
+                                    "required": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
                                 },
                                 {
                                     "label": "9",
-                                    "value": 9
+                                    "value": 9,
+                                    "required": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
                                 }
                             ]
-                        },
-                        "visible": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
+                        }
                     },
                     {
                         "name": "singleNodeVmSize",
