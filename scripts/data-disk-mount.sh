@@ -1,9 +1,6 @@
 ######################################################################################################
 #	File         : data-disk-mount.sh
 #	Description  : This script will identyfy the new disk and mount it with a single primary partition
-#	Author	     : T S Pradeep Kumar
-#	Date		 : 11/8/2016
-#   Version		 : V1.0
 ######################################################################################################
 
 #!/bin/bash
