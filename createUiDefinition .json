@@ -136,7 +136,7 @@
                                     "value": "SingleNode"
                                 },
                                 {
-                                    "label": "Cluster",
+                                    "label": "Multi nodes",
                                     "value": "MultiNode"
                                 }
                             ],
@@ -150,7 +150,6 @@
                         "defaultValue": 3,
                         "toolTip": "Number of nodes in the cluster",
                         "constraints": {
-                            "required": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]",
                             "allowedValues": [
                                 {
                                     "label": "3",
