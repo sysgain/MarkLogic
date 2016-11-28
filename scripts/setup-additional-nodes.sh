@@ -17,7 +17,7 @@ N_RETRY=$5
 RETRY_INTERVAL=$6
 
 NOW=$(date +"%Y-%m-%d")
-
+mkdir /home/sysgain/logfiles
 ######################################################################################################
 # restart_check(hostname, baseline_timestamp, caller_lineno)
 #
@@ -36,7 +36,7 @@ function restart_check {
       return 0
     fi
   done
-  echo "ERROR: Line $3: Failed to restart $1" >> log-setupadditionalnode-$NOW.log
+  echo "ERROR: Line $3: Failed to restart $1" >> /home/sysgain/logfiles/log-setupadditionalnode-$NOW.log
   exit 1
 }
 
@@ -44,7 +44,7 @@ if [ $# -ge 7 ]; then
   BOOTSTRAP_HOST=$1
   shift 6
 else
-  echo "ERROR: At least two hostnames are required." >&2 >> log-setupadditionalnode-$NOW.log
+  echo "ERROR: At least two hostnames are required." >&2 >> /home/sysgain/logfiles/log-setupadditionalnode-$NOW.log
   exit 1
 fi
 ADDITIONAL_HOSTS=$@
@@ -62,7 +62,7 @@ AUTH_CURL="${CURL} --${AUTH_MODE} --user ${USER}:${PASS}"
 #####################################################################################################
 
 for JOINING_HOST in $ADDITIONAL_HOSTS; do
-  echo "Adding host to cluster: $JOINING_HOST..." >> log-setupadditionalnode-$NOW.log
+  echo "Adding host to cluster: $JOINING_HOST..." >> /home/sysgain/logfiles/log-setupadditionalnode-$NOW.log
 
   # (1) Initialize MarkLogic Server on the joining host
   TIMESTAMP=`$CURL -X POST -d "" \
@@ -70,7 +70,7 @@ for JOINING_HOST in $ADDITIONAL_HOSTS; do
      | grep "last-startup" \
      | sed 's%^.*<last-startup.*>\(.*\)</last-startup>.*$%\1%'`
   if [ "$TIMESTAMP" == "" ]; then
-    echo "ERROR: Failed to initialize $JOINING_HOST" >&2 >> log-setupadditionalnode-$NOW.log
+    echo "ERROR: Failed to initialize $JOINING_HOST" >&2 >> /home/sysgain/logfiles/log-setupadditionalnode-$NOW.log
     exit 1
   fi
   restart_check $JOINING_HOST $TIMESTAMP $LINENO
@@ -80,7 +80,7 @@ for JOINING_HOST in $ADDITIONAL_HOSTS; do
         http://${JOINING_HOST}:8001/admin/v1/server-config`
   echo $JOINER_CONFIG | grep -q "^<host"
   if [ "$?" -ne 0 ]; then
-    echo "ERROR: Failed to fetch server config for $JOINING_HOST" >> log-setupadditionalnode-$NOW.log
+    echo "ERROR: Failed to fetch server config for $JOINING_HOST" >> /home/sysgain/logfiles/log-setupadditionalnode-$NOW.log
     exit 1
   fi
   
@@ -97,11 +97,11 @@ for JOINING_HOST in $ADDITIONAL_HOSTS; do
         -H "Content-type: application/x-www-form-urlencoded" \
         http://${BOOTSTRAP_HOST}:8001/admin/v1/cluster-config
   if [ "$?" -ne 0 ]; then
-    echo "ERROR: Failed to fetch cluster config from $BOOTSTRAP_HOST" >> log-setupadditionalnode-$NOW.log
+    echo "ERROR: Failed to fetch cluster config from $BOOTSTRAP_HOST" >> /home/sysgain/logfiles/log-setupadditionalnode-$NOW.log
     exit 1
   fi
   if [ `file cluster-config.zip | grep -cvi "zip archive data"` -eq 1 ]; then
-    echo "ERROR: Failed to fetch cluster config from $BOOTSTRAP_HOST" >> log-setupadditionalnode-$NOW.log
+    echo "ERROR: Failed to fetch cluster config from $BOOTSTRAP_HOST" >> /home/sysgain/logfiles/log-setupadditionalnode-$NOW.log
     exit 1
   fi
   #####################################################################################################
@@ -119,5 +119,5 @@ for JOINING_HOST in $ADDITIONAL_HOSTS; do
   restart_check $JOINING_HOST $TIMESTAMP $LINENO
   rm ./cluster-config.zip
 
-  echo "...$JOINING_HOST successfully added to the cluster." >> log-setupadditionalnode-$NOW.log
+  echo "...$JOINING_HOST successfully added to the cluster." >> /home/sysgain/logfiles/log-setupadditionalnode-$NOW.log
 done
