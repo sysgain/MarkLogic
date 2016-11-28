@@ -146,7 +146,7 @@
                     {
                         "name": "nodeCount",
                         "type": "Microsoft.Common.DropDown",
-                        "label": "Number of Nodes",
+                        "label": "Number of Node",
                         "defaultValue": 1,
                         "toolTip": "Number of nodes in the cluster",
                         "constraints": {
@@ -164,7 +164,7 @@
                         "name": "nodeCount",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Number of Nodes",
-                        "defaultValue": 1,
+                        "defaultValue": 3,
                         "toolTip": "Number of nodes in the cluster",
                         "constraints": {
                             "required": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]",
