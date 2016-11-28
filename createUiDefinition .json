@@ -125,6 +125,25 @@
                         }
                     },
                     {
+                        "name": "clusterType",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "MarkLogic Cluster Type.",
+                        "defaultValue": "Single node",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Single node",
+                                    "value": "SingleNode"
+                                },
+                                {
+                                    "label": "Multi node",
+                                    "value": "MultiNode"
+                                }
+                            ],
+                            "required": true
+                        }
+                    },
+                    {
                         "name": "nodeCount",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Number of Nodes",
@@ -190,10 +209,10 @@
                             "sku": "marklogic_80-preview"
                         },
                         "count": 1,
-                        "visible": "[equals(steps('nodesSettings').nodeCount, 1)]"
+                        "visible": "[equals(steps('nodesSettings').clusterType, SingleNode)]"
                     },
                     {
-                        "name": "multiNodeVmSize3",
+                        "name": "multiNodeVmSize",
                         "type": "Microsoft.Compute.SizeSelector",
                         "label": "VM size",
                         "toolTip": "Select VM Size (will use 1 data disks)",
@@ -221,101 +240,8 @@
                             "sku": "marklogic_80-preview"
                         },
                         "count": "[steps('nodesSettings').nodeCount]",
-                        "visible": "[equals(steps('nodesSettings').nodeCount, 3)]"
-                    },
-                    {
-                        "name": "multiNodeVmSize5",
-                        "type": "Microsoft.Compute.SizeSelector",
-                        "label": "VM size",
-                        "toolTip": "Select VM Size (will use 1 data disks)",
-                        "recommendedSizes": [
-                            "Standard_DS13",
-                            "Standard_DS13_v2",
-                            "Standard_GS3"
-                        ],
-                        "constraints": {
-                            "allowedSizes": [
-                                "Standard_DS13",
-                                "Standard_DS14",
-                                "Standard_DS13_v2",
-                                "Standard_DS14_v2",
-                                "Standard_DS15_v2",
-                                "Standard_GS3",
-                                "Standard_GS4",
-                                "Standard_GS5"
-                            ]
-                        },
-                        "osPlatform": "Linux",
-                        "imageReference": {
-                            "publisher": "marklogic",
-                            "offer": "marklogic_80-preview",
-                            "sku": "marklogic_80-preview"
-                        },
-                        "count": "[steps('nodesSettings').nodeCount]",
-                        "visible": "[equals(steps('nodesSettings').nodeCount, 5)]"
-                    },
-                    {
-                        "name": "multiNodeVmSize7",
-                        "type": "Microsoft.Compute.SizeSelector",
-                        "label": "VM size",
-                        "toolTip": "Select VM Size (will use 1 data disks)",
-                        "recommendedSizes": [
-                            "Standard_DS13",
-                            "Standard_DS13_v2",
-                            "Standard_GS3"
-                        ],
-                        "constraints": {
-                            "allowedSizes": [
-                                "Standard_DS13",
-                                "Standard_DS14",
-                                "Standard_DS13_v2",
-                                "Standard_DS14_v2",
-                                "Standard_DS15_v2",
-                                "Standard_GS3",
-                                "Standard_GS4",
-                                "Standard_GS5"
-                            ]
-                        },
-                        "osPlatform": "Linux",
-                        "imageReference": {
-                            "publisher": "marklogic",
-                            "offer": "marklogic_80-preview",
-                            "sku": "marklogic_80-preview"
-                        },
-                        "count": "[steps('nodesSettings').nodeCount]",
-                        "visible": "[equals(steps('nodesSettings').nodeCount, 7)]"
-                    },
-                    {
-                        "name": "multiNodeVmSize9",
-                        "type": "Microsoft.Compute.SizeSelector",
-                        "label": "VM size",
-                        "toolTip": "Select VM Size (will use 1 data disks)",
-                        "recommendedSizes": [
-                            "Standard_DS13",
-                            "Standard_DS13_v2",
-                            "Standard_GS3"
-                        ],
-                        "constraints": {
-                            "allowedSizes": [
-                                "Standard_DS13",
-                                "Standard_DS14",
-                                "Standard_DS13_v2",
-                                "Standard_DS14_v2",
-                                "Standard_DS15_v2",
-                                "Standard_GS3",
-                                "Standard_GS4",
-                                "Standard_GS5"
-                            ]
-                        },
-                        "osPlatform": "Linux",
-                        "imageReference": {
-                            "publisher": "marklogic",
-                            "offer": "marklogic_80-preview",
-                            "sku": "marklogic_80-preview"
-                        },
-                        "count": "[steps('nodesSettings').nodeCount]",
-                        "visible": "[equals(steps('nodesSettings').nodeCount, 9)]"
-                    },
+                        "visible": "[equals(steps('nodesSettings').clusterType, MultiNode)]"
+                    },                
                     {
                         "name": "storageAccount",
                         "type": "Microsoft.Storage.StorageAccountSelector",
@@ -465,10 +391,7 @@
             "adminUsernameMarkLogicPortal": "[steps('markLogicPortal').adminUsernameMarkLogicPortal]",
             "adminPasswordMarkLogicPortal": "[steps('markLogicPortal').adminPasswordMarkLogicPortal]",
             "singleNodeSize": "[steps('nodesSettings').singleNodeVmSize]",
-            "clusterNodeSize": "[steps('nodesSettings').multiNodeVmSize3]",
-            "clusterNodeSize": "[steps('nodesSettings').multiNodeVmSize5]",
-            "clusterNodeSize": "[steps('nodesSettings').multiNodeVmSize7]",
-            "clusterNodeSize": "[steps('nodesSettings').multiNodeVmSize9]",
+            "clusterNodeSize": "[steps('nodesSettings').multiNodeVmSize]",         
             "markLogicLicenseKey": "[steps('markLogicPortal').MarkLogicLicenseKey]",
             "markLogicLicensee": "[steps('markLogicPortal').MarkLogicLicensee]",
             "virtualNetworkName": "[steps('networkSettings').vnetSpec.name]",
