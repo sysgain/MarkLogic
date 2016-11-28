@@ -136,7 +136,7 @@
                                     "value": "SingleNode"
                                 },
                                 {
-                                    "label": "Multi node",
+                                    "label": "Cluster",
                                     "value": "MultiNode"
                                 }
                             ],
@@ -150,31 +150,27 @@
                         "defaultValue": 1,
                         "toolTip": "Number of nodes in the cluster",
                         "constraints": {
+                            "required": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]",
                             "allowedValues": [
                                 {
                                     "label": "1",
-                                    "value": 1,
-                                    "required": "[equals(steps('nodesSettings').clusterType, 'SingleNode')]"
+                                    "value": 1
                                 },
                                 {
                                     "label": "3",
-                                    "value": 3,
-                                    "required": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
+                                    "value": 3
                                 },
                                 {
                                     "label": "5",
-                                    "value": 5,
-                                    "required": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
+                                    "value": 5
                                 },
                                 {
                                     "label": "7",
-                                    "value": 7,
-                                    "required": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
+                                    "value": 7
                                 },
                                 {
                                     "label": "9",
-                                    "value": 9,
-                                    "required": "[equals(steps('nodesSettings').clusterType, 'MultiNode')]"
+                                    "value": 9
                                 }
                             ]
                         }
