@@ -460,7 +460,7 @@
             "clusterNodeCount": "[steps('nodesSettings').nodeCount]",
             "adminUsername": "[basics('Basics').vmUsername]",
             "adminPasswordOrSshKey": "[basics('Basics').SSHCredentials.password]",
-            "adminPasswordOrSshKey": "[basics('Basics').SSHCredentials.sshPublicKey]",
+            "adminPasswordOrSshKey1": "[basics('Basics').SSHCredentials.sshPublicKey]",
             "authenticationType": "[basics('Basics').SSHCredentials.authenticationType]",
             "adminUsernameMarkLogicPortal": "[steps('markLogicPortal').adminUsernameMarkLogicPortal]",
             "adminPasswordMarkLogicPortal": "[steps('markLogicPortal').adminPasswordMarkLogicPortal]",
