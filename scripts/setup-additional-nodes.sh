@@ -4,9 +4,6 @@
 #	Description  : Use this script to initialize and add one or more hosts to a
 # 				       MarkLogic Server cluster. The first (bootstrap) host for the cluster should already 
 #                be fully initialized.
-#	Author	     : T S Pradeep Kumar
-#	Date		     : 11/10/2016
-# Version		   : V1.0
 # Usage : sh filename.sh masternode user password auth_mode n_retry retry_interval joiningnode
 ######################################################################################################
 
