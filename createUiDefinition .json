@@ -146,27 +146,6 @@
                     {
                         "name": "nodeCount",
                         "type": "Microsoft.Common.DropDown",
-                        "label": "Number of Node",
-                        "defaultValue": 1,
-                        "toolTip": "Number of nodes in the cluster",
-                        "constraints": {
-                            "required": "[equals(steps('nodesSettings').clusterType, 'SingleNode')]",
-                            "allowedValues": [
-                                {
-                                    "label": "1",
-                                    "value": 1
-                                },
-                                {
-                                    "label": "1",
-                                    "value": 1
-                                }
-                            ]
-                        },
-                        "visible": "[equals(steps('nodesSettings').clusterType, 'SingleNode')]"
-                    },
-                    {
-                        "name": "nodeCount",
-                        "type": "Microsoft.Common.DropDown",
                         "label": "Number of Nodes",
                         "defaultValue": 3,
                         "toolTip": "Number of nodes in the cluster",
