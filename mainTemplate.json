@@ -4,34 +4,21 @@
     "parameters": {
         "location": {
             "type": "string",
-            "defaultValue": "westus",
+            "defaultValue": "West US",
             "allowedValues": [
                 "Brazil South",
-                "brazilsouth",
                 "East Asia",
-                "eastasia",
                 "East US",
-                "eastus",
                 "Japan East",
-                "japaneast",
                 "Japan West",
-                "japanwest",
                 "North Central US",
-                "northcentralus",
                 "North Europe",
-                "northeurope",
                 "South Central US",
-                "southcentralus",
                 "West Europe",
-                "westeurope",
                 "West US",
-                "westus",
                 "Southeast Asia",
-                "southeastasia",
                 "Central US",
-                "centralus",
-                "East US 2",
-                "eastus2"
+                "East US 2"
             ],
             "metadata": {
                 "description": "Deployment Location Hint: Use lowercase for creating ipaddress"
@@ -224,7 +211,7 @@
                 "description": "OS Admin password"
             }
         },
-        "sshkey":{
+        "sshkey": {
             "type": "securestring",
             "defaultValue": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAvnZEoqeHJtHa8LizTlvTlXZ62Vffq0X2o915TfI47QMv+cId0i6j/ZalD4WnuJwdMFlpowT+G04fNImxzSIIpzhsuDuime2ewC7TiCZTz3eRwAzmcGAWthp5W0PlBRvQk1qGvDh95RmHlFoqZ9x/29av89cglUsrOA2qq8zAV2FGpYKZR5FrZuU7vnl10Ie2CpUoE8kEID/DWrZTUDSSQ+kZ5VJwloVwrs/lZo1KbP7hns5yQMEH5oHI8qG43ljKoJfyra4Lyel0SxNa9CeTJBgc1oRh1pZUcmcV/MGmvesFrQKI3Gz/jMzk1tBTp8WwzBVWZF+owV2vtM0ryuSElQ== rsa-key-20161128",
             "metadata": {
@@ -244,11 +231,11 @@
             "metadata": {
                 "description": "Admin password for MarkLogic Admin Portal"
             }
-        }      
+        }
     },
-    "variables": {       
-        "baseUrl":"https://raw.githubusercontent.com/sysgain/MarkLogic/mldevchange",
-        "adminPasswordOrSshKey":"[parameters(parameters('authenticationType'))]",
+    "variables": {
+        "baseUrl": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldevchange",
+        "adminPasswordOrSshKey": "[parameters(parameters('authenticationType'))]",
         "uniqueString": "[substring(uniquestring(resourceGroup().id),0,8)]",
         "publicIpTemplate": "[concat('lbPublicIp',parameters('loadBalancerType'))]",
         "lbPublicIpexternal": "publicip.json",
@@ -410,7 +397,6 @@
                 ],
                 "commandToExecute": "[concat('sh setup-additional-nodes.sh',' ', parameters('clusterPrefix'), '0', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ','anyauth 5 10 localhost')]"
             }
-           
         },
         "templateUrls": {
             "sharedResourcesTemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'shared-resources.json')]",
@@ -431,7 +417,6 @@
             "dataDiskMountScriptUrl": "[concat(variables('baseUrl'), '/scripts/', 'data-disk-mount.sh')]",
             "firstNodeConfigScriptUrl": "[concat(variables('baseUrl'), '/scripts/', 'setup-first-node.sh')]",
             "additionalNodesConfigScriptUrl": "[concat(variables('baseUrl'), '/scripts/', 'setup-additional-nodes.sh')]"
-            
         }
     },
     "resources": [
