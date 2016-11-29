@@ -254,15 +254,7 @@
             "vmSize": "[parameters('clusterNodeSize')]",
             "nodes": "cluster"
         },
-        "cluster-size-4": {
-            "vmSize": "[parameters('clusterNodeSize')]",
-            "nodes": "cluster"
-        },
         "cluster-size-5": {
-            "vmSize": "[parameters('clusterNodeSize')]",
-            "nodes": "cluster"
-        },
-        "cluster-size-6": {
             "vmSize": "[parameters('clusterNodeSize')]",
             "nodes": "cluster"
         },
@@ -270,15 +262,7 @@
             "vmSize": "[parameters('clusterNodeSize')]",
             "nodes": "cluster"
         },
-        "cluster-size-8": {
-            "vmSize": "[parameters('clusterNodeSize')]",
-            "nodes": "cluster"
-        },
         "cluster-size-9": {
-            "vmSize": "[parameters('clusterNodeSize')]",
-            "nodes": "cluster"
-        },
-        "cluster-size-10": {
             "vmSize": "[parameters('clusterNodeSize')]",
             "nodes": "cluster"
         },
