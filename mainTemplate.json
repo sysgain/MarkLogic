@@ -229,6 +229,7 @@
         }
     },
     "variables": {
+        "doublequotes":" \" ",
         "baseUrl": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldevchange",
         "adminPasswordOrSshKey": "[parameters(parameters('authenticationType'))]",
         "uniqueString": "[substring(uniquestring(resourceGroup().id),0,8)]",
