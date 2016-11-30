@@ -353,7 +353,7 @@
                 "customScriptsUrl": [
                     "[variables('templateUrls').dataDiskMountScriptUrl]"
                 ],
-                "commandToExecute": "sh data-disk-mount.sh"
+                "commandToExecute": "[concat('sh data-disk-mount.sh', ' ', parameters('adminUsername'))]"
             },
             "firstNodeConfigExtension": {
                 "location": "[parameters('location')]",
