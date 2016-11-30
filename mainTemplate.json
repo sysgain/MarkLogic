@@ -229,7 +229,7 @@
         }
     },
     "variables": {
-        "baseUrl": "https://raw.githubusercontent.com/sysgain/MarkLogic/mldevchange",
+        "baseUrl": "https://raw.githubusercontent.com/sysgain/MarkLogic/ml-deliver",
         "singleQuote": "'",
         "adminPasswordOrSshKey": "[parameters(parameters('authenticationType'))]",
         "uniqueString": "[substring(uniquestring(resourceGroup().id),0,8)]",
@@ -395,8 +395,8 @@
             "virtualMachineExtensionMultiIndex1TemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'extension-multi-index-1.json')]",
             "virtualMachineExtensionMultiIndex0ForestTemplateUrl": "[concat(variables('baseUrl'), '/nested/', 'extension-multi-index-0-forest.json')]",
             "dataDiskMountScriptUrl": "[concat(variables('baseUrl'), '/scripts/', 'data-disk-mount.sh')]",
-            "firstNodeConfigScriptUrl": "[concat(variables('baseUrl'), '/scripts/', 'setup-first-node-with-license.sh')]",
-            "additionalNodesConfigScriptUrl": "[concat(variables('baseUrl'), '/scripts/', 'setup-additional-nodes-with-license.sh')]"
+            "firstNodeConfigScriptUrl": "[concat(variables('baseUrl'), '/scripts/', 'setup-first-node.sh')]",
+            "additionalNodesConfigScriptUrl": "[concat(variables('baseUrl'), '/scripts/', 'setup-additional-nodes.sh')]"
         }
     },
     "resources": [
