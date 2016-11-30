@@ -1,8 +1,8 @@
-######################################################################################################
+################################################################################################################################
 #	File         :setup-first-node.sh
 #	Description  : This script will setup the head/first node in the cluster
-# Usage        : sh filename.sh hostname user password auth_mode n_retry retry_interval licencekey licensee
-######################################################################################################
+#       Usage        : sh filename.sh hostname user password auth_mode n_retry retry_interval logfiledir licencekey licensee
+#################################################################################################################################
 
 #!/bin/bash
 
@@ -13,7 +13,8 @@ AUTH_MODE=$4
 SEC_REALM=$5
 N_RETRY=$6
 RETRY_INTERVAL=$7
-LOGFILEDIR=$8
+#logfiledir name should be same as vmusername
+LOGFILEDIR=$8    
 LICENSEKEY=$9
 LICENSEE=${10}
 
