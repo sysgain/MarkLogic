@@ -364,7 +364,7 @@
                 "customScriptsUrl": [
                     "[variables('templateUrls').firstNodeConfigScriptUrl]"
                 ],
-                "commandToExecute": "[concat('sh setup-first-node-with-license.sh localhost', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ','anyauth public 5 10', ' ',parameters('adminUsername'),' ',parameters('markLogicLicenseKey'),' ',variables('singleQuote'),parameters('markLogicLicensee'),variables('singleQuote'))]"
+                "commandToExecute": "[concat('sh setup-first-node.sh localhost', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ','anyauth public 5 10', ' ',parameters('adminUsername'),' ',parameters('markLogicLicenseKey'),' ',variables('singleQuote'),parameters('markLogicLicensee'),variables('singleQuote'))]"
             },
             "additionalNodesConfigExtension": {
                 "location": "[parameters('location')]",
@@ -375,7 +375,7 @@
                 "customScriptsUrl": [
                     "[variables('templateUrls').additionalNodesConfigScriptUrl]"
                 ],
-                "commandToExecute": "[concat('sh setup-additional-nodes-with-license.sh',' ', parameters('clusterPrefix'), '0', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ','anyauth 5 10 ',parameters('markLogicLicenseKey'),' ',variables('singleQuote'),parameters('markLogicLicensee'),variables('singleQuote'),' ',parameters('adminUsername'),' ','localhost')]"
+                "commandToExecute": "[concat('sh setup-additional-nodes.sh',' ', parameters('clusterPrefix'), '0', ' ', parameters('adminUsernameMarkLogicPortal'), ' ', parameters('adminPasswordMarkLogicPortal'), ' ','anyauth 5 10 ',parameters('markLogicLicenseKey'),' ',variables('singleQuote'),parameters('markLogicLicensee'),variables('singleQuote'),' ',parameters('adminUsername'),' ','localhost')]"
             }
         },
         "templateUrls": {
