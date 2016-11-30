@@ -11,7 +11,7 @@
   },
   "variables": {
     "location": "[parameters('networkSettings').location]",
-    "networkApiVersion": "[parameters('networkSettings').networkApiVersion]",
+    "networkApiVersion": "[parameters('networkSettings').availabilitySetApiVersion]",
     "availabilitySetName": "[parameters('networkSettings').availabilitySetName]",
     "platformFaultDomainCount": "[parameters('networkSettings').platformFaultDomainCount]",
     "platformUpdateDomainCount": "[parameters('networkSettings').platformUpdateDomainCount]"
