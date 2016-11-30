@@ -20,7 +20,7 @@ LICENSEE=${10}
 
 #Log file to record all the activities
 NOW=$(date +"%Y-%m-%d")
-mkdir /home/$LOGFILEDIR/logfiles
+#mkdir /home/$LOGFILEDIR/logfiles
 
 #############################################################
 # restart_check(hostname, baseline_timestamp, caller_lineno)
