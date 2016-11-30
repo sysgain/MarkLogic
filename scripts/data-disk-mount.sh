@@ -17,7 +17,7 @@ NOW=$(date +"%Y-%m-%d")
 
 check_for_new_disks() {
 
-    echo "Checking for new disks started..........." >> /home/sysgain/logfiles/disk-mount-log-$NOW.log
+    echo "Checking for new disks started..........." >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
     # Looks for unpartitioned disks
     declare -a RET
     DEVS=($(ls -1 /dev/sd*|egrep -v "${DISKS_TO_IGNORE}"|egrep -v "[0-9]$"))
