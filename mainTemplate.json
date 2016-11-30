@@ -266,11 +266,13 @@
             "deploymentApiVersion": "2016-02-01",
             "networkApiVersion": "2016-06-01",
             "storageApiVersion": "2016-01-01",
-            "computeApiVersion": "2016-03-30"
+            "computeApiVersion": "2016-03-30",
+            "availabilitySetApiVersion": "2016-03-30"
         },
         "networkSettings": {
             "location": "[parameters('location')]",
             "networkApiVersion": "[variables('apiVersions').networkApiVersion]",
+            "availabilitySetApiVersion": "[variables('apiVersions').availabilitySetApiVersion]",
             "virtualNetworkName": "[parameters('virtualNetworkName')]",
             "virtualNetworkExistingRGName": "[parameters('virtualNetworkExistingRGName')]",
             "virtualNetworkAddressPrefix": "[parameters('virtualNetworkAddressPrefix')]",
