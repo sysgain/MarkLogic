@@ -18,7 +18,7 @@ LOGFILEDIR=$9
 
 
 NOW=$(date +"%Y-%m-%d")
-mkdir /home/$LOGFILEDIR/logfiles
+#mkdir /home/$LOGFILEDIR/logfiles
 
 ######################################################################################################
 # restart_check(hostname, baseline_timestamp, caller_lineno)
