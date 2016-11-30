@@ -272,7 +272,7 @@
                             "subnets": ""
                         },
                         "defaultValue": {
-                            "name": "markLogicVnet",
+                            "name": "mlvnet",
                             "addressPrefixSize": "/16"
                         },
                         "constraints": {
@@ -285,7 +285,7 @@
                             "subnet1": {
                                 "label": "Subnet",
                                 "defaultValue": {
-                                    "name": "subnet-1",
+                                    "name": "mlsubnet",
                                     "addressPrefixSize": "/24"
                                 },
                                 "constraints": {
@@ -310,7 +310,7 @@
                         },
                         "defaultValue": {
                             "publicIpAddressName": "markIP",
-                            "domainNameLabel": "pipxamp1a1"
+                            "domainNameLabel": ""
                         },
                         "constraints": {
                             "required": {
@@ -352,8 +352,8 @@
                             "domainNameLabel": "DNS label for the Node load balancer public IP address. This must be unique."
                         },
                         "defaultValue": {
-                            "publicIpAddressName": "lbpip",
-                            "domainNameLabel": "lbxamp1a1"
+                            "publicIpAddressName": "mllbpublicip",
+                            "domainNameLabel": ""
                         },
                         "options": {
                             "hideNone": true,
