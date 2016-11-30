@@ -1,6 +1,7 @@
 ######################################################################################################
 #	File         : data-disk-mount.sh
 #	Description  : This script will identyfy the new disk and mount it with a single primary partition
+#       Usage        : sh filename.sh user
 ######################################################################################################
 
 #!/bin/bash
@@ -12,12 +13,12 @@ DISKS_TO_IGNORE="/dev/sda|/dev/sdb"
 BASE_DIR="/media"
 
 #Log file to record all the activities
-mkdir /home/sysgain/logfiles
 NOW=$(date +"%Y-%m-%d")
-
+LOGFILEDIR=$1
+mkdir /home/$LOGFILEDIR/logfiles
 check_for_new_disks() {
 
-    echo "Checking for new disks started..........." >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
+    echo "Checking for new disks started..........." >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
     # Looks for unpartitioned disks
     declare -a RET
     DEVS=($(ls -1 /dev/sd*|egrep -v "${DISKS_TO_IGNORE}"|egrep -v "[0-9]$"))
@@ -34,7 +35,7 @@ check_for_new_disks() {
 }
 
 check_next_mountpoint() {
-    echo "Checking for next mount point  started..........." >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
+    echo "Checking for next mount point  started..........." >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
     DIRS=($(ls -1d ${BASE_DIR}/data* 2>&1| sort --version-sort))
     if [ -z "${DIRS[0]}" ];
     then
@@ -49,7 +50,7 @@ check_next_mountpoint() {
 }
 
 insert_to_fstab() {
-    echo "inserting the UUID to /etc/fstab  started..........." >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
+    echo "inserting the UUID to /etc/fstab  started..........." >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
     UUID=${1}
     MOUNTPOINT=${2}
     grep "${UUID}" /etc/fstab >/dev/null 2>&1
@@ -58,8 +59,8 @@ insert_to_fstab() {
         echo "Not adding ${UUID} to fstab again (it's already there!)"
     else
         LINE="UUID=${UUID}        ${MOUNTPOINT}        ext4        defaults,nofail        1 2"
-		echo "inserting the following entry to /etc/fstab..............." >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
-		echo "${LINE}" >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
+		echo "inserting the following entry to /etc/fstab..............." >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
+		echo "${LINE}" >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
         echo -e "${LINE}" >> /etc/fstab
     fi
 
@@ -82,7 +83,7 @@ has_filesystem() {
 }
 
 do_partition() {
-echo "Partitioning the disk started..................." >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
+echo "Partitioning the disk started..................." >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
 # This function creates one (1) primary partition on the
 # disk, using all available space
     DISK=${1}
@@ -98,61 +99,56 @@ w"| fdisk "${DISK}" > /dev/null 2>&1
 # from fdisk and not from echo
 if [ ${PIPESTATUS[1]} -ne 0 ];
 then
-    echo "An error occurred partitioning ${DISK}" >&2 >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
-    echo "I cannot continue" >&2 >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
+    echo "An error occurred partitioning ${DISK}" >&2 >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
+    echo "I cannot continue" >&2 >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
     exit 2
 fi
 
 }
 
-echo "#############################################################################" >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
-echo "                                                                    " >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
-echo "					 Log file: Data Disk Mount                        " >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
-echo "The data-disk mount script is started at:  `date`" >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
-echo "                                                                    " >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
-echo "#############################################################################" >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
-echo "                                                                    " >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
-echo "                                                                    " >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
+echo "#############################################################################" >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
+echo "                                                                    " >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
+echo "					 Log file: Data Disk Mount                        " >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
+echo "The data-disk mount script is started at:  `date`" >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
+echo "                                                                    " >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
+echo "#############################################################################" >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
+echo "                                                                    " >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
+echo "                                                                    " >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
 
-if [ -z "${1}" ];
-then
-    DISKS=($(check_for_new_disks))
-else
-    DISKS=("${@}")
-fi
+DISKS=($(check_for_new_disks))
 if [ "$DISKS" == "" ]
 then 
-    echo "There are no new disks"
+    echo "There are no new disks" >>/home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
 else
-echo "Disks are ${DISKS[@]}" >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
+echo "Disks are ${DISKS[@]}" >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
 for DISK in "${DISKS[@]}";
 do
-    echo "Working on ${DISK}" >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
+    echo "Working on ${DISK}" >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
     is_partitioned ${DISK}
     if [ ${?} -ne 0 ];
     then
 	
-        echo "${DISK} is not partitioned, partitioning" >> /home/sysgain/logfiles/home/sysgain/logfiles/data-disk-mount-$NOW.log
+        echo "${DISK} is not partitioned, partitioning" >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
         do_partition ${DISK}
-		echo "Partitioning the disk ended..................." >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
+		echo "Partitioning the disk ended..................." >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
     fi
     PARTITION=$(fdisk -l ${DISK}|grep -A 1 Device|tail -n 1|awk '{print $1}')
     has_filesystem ${PARTITION}
     
 	if [ ${?} -ne 0 ];
     then
-        echo "Creating filesystem on ${PARTITION}." >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
+        echo "Creating filesystem on ${PARTITION}." >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
         #echo "Press Ctrl-C if you don't want to destroy all data on ${PARTITION}"
         #sleep 5
         mkfs -j -t ext4 ${PARTITION}
     fi
 	
     MOUNTPOINT=$(check_next_mountpoint)
-    echo "Next mount point appears to be ${MOUNTPOINT}" >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
+    echo "Next mount point appears to be ${MOUNTPOINT}" >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
     [ -d "${MOUNTPOINT}" ] || mkdir "${MOUNTPOINT}"
 	UUID=$(blkid -u filesystem ${PARTITION}|awk -F "[= ]" '{print $3}'|tr -d "\"")
     insert_to_fstab "${UUID}" "${MOUNTPOINT}"
-    echo "Mounting disk ${PARTITION} on ${MOUNTPOINT}" >> /home/sysgain/logfiles/data-disk-mount-$NOW.log
+    echo "Mounting disk ${PARTITION} on ${MOUNTPOINT}" >> /home/$LOGFILEDIR/logfiles/data-disk-mount-$NOW.log
     mount "${MOUNTPOINT}"
 	
 	#making the drive writable
