@@ -229,7 +229,7 @@
         }
     },
     "variables": {
-        "baseUrl": "https://raw.githubusercontent.com/sysgain/MarkLogic/ml-deliver",
+        "baseUrl": "https://raw.githubusercontent.com/sysgain/MarkLogic/ml-ms-changes",
         "singleQuote": "'",
         "adminPasswordOrSshKey": "[parameters(parameters('authenticationType'))]",
         "uniqueString": "[substring(uniquestring(resourceGroup().id),0,8)]",
@@ -263,10 +263,10 @@
             "nodes": "cluster"
         },
         "apiVersions": {
-            "deploymentApiVersion": "2015-01-01",
-            "networkApiVersion": "2015-06-15",
-            "storageApiVersion": "2015-06-15",
-            "computeApiVersion": "2015-06-15"
+            "deploymentApiVersion": "2016-02-01",
+            "networkApiVersion": "2016-06-01",
+            "storageApiVersion": "2016-01-01",
+            "computeApiVersion": "2016-03-30"
         },
         "networkSettings": {
             "location": "[parameters('location')]",
